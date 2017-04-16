@@ -9,5 +9,91 @@
   	<module>common</module>
   	<module>oannes-common</module>
   	<module>oannes-container</module>
+  	<module>oannes-config</module>
+  	<module>oannes-rpc</module>
+  	<module>oannes-transport</module>
+  	<module>oannes-registry</module>
+  	<module>oannes-demo</module>
   </modules>
+  <profiles>
+	  <profile>  
+	    <id>jdk17</id>  
+	    <activation>  
+	        <activeByDefault>true</activeByDefault>  
+	        <jdk>1.7</jdk>  
+	    </activation>  
+	    <properties>  
+	        <maven.compiler.source>1.7</maven.compiler.source>  
+	        <maven.compiler.target>1.7</maven.compiler.target>  
+	        <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>  
+	    </properties>   
+	</profile>  
+  </profiles>
+  <properties>
+		<!-- Common libs -->
+		<spring_version>4.3.7.RELEASE</spring_version>
+		<slf4j_version>1.6.2</slf4j_version>
+		<jcl_version>1.1</jcl_version>
+		<log4j_version>1.2.16</log4j_version>
+		<jcl_version>1.1</jcl_version>
+		<zookeeper_version>3.4.7</zookeeper_version>
+		<zkclient_version>0.1</zkclient_version>
+		<fastjson_version>1.1.41</fastjson_version>
+   </properties>
+  <dependencies>
+  <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-beans</artifactId>
+		    <version>${spring_version}</version>
+		</dependency>
+			<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-core</artifactId>
+		    <version>${spring_version}</version>
+		</dependency>
+	  <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>${spring_version}</version>
+	</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging-api</artifactId>
+				<version>${jcl_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j_version}</version>
+			</dependency>
+				<dependency>
+				<groupId>org.apache.zookeeper</groupId>
+				<artifactId>zookeeper</artifactId>
+				<version>${zookeeper_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.sgroschupf</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>${zkclient_version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+			<dependency>
+			    <groupId>com.alibaba</groupId>
+			    <artifactId>fastjson</artifactId>
+			    <version>${fastjson_version}</version>
+			</dependency>
+			
+  </dependencies>
 </project>
