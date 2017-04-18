@@ -13,5 +13,7 @@ public interface Register {
 	void subscribe(List<URL> urls,NotifyListener l);
 	
 	void unSubscribe(List<URL> urls,NotifyListener l);
+	 
+	void subscribe(String subject,NotifyListener l,Class type);
 
 }

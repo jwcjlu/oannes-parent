@@ -1,17 +1,29 @@
 package com.jwcjlu.oannes.register;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.I0Itec.zkclient.ZkClient;
 
+import com.jwcjlu.oannes.common.Handler;
 import com.jwcjlu.oannes.common.URL;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
 
 public class ZookeeperRegister implements Register{
+	private static List<String>subjects=new ArrayList<String>();
+	private static ZookeeperRegister register;
+	public static ZookeeperRegister  getInstance(String zkConfig){
+		if(register!=null){
+			return register;
+		}else{
+			register=new ZookeeperRegister(zkConfig);
+		}
+		return register;
+	}
 	
 	 ZkClient zk;
-  public ZookeeperRegister(String zkConfig){
+	private ZookeeperRegister(String zkConfig){
 	  zk = new ZkClient(zkConfig);
    }
 	@Override
@@ -36,6 +48,7 @@ public class ZookeeperRegister implements Register{
 	@Override
 	public void subscribe(List<URL> urls, NotifyListener l) {
 		// TODO Auto-generated method stub
+	
 		
 	}
 
@@ -52,6 +65,17 @@ public class ZookeeperRegister implements Register{
 		
 		zk.createPersistent("/dubbo/oannes/ddd", true);
 		System.in.read();
+	}
+	@Override
+	public void subscribe(String subject, NotifyListener l,Class type) {
+		// TODO Auto-generated method stub
+		if(!subjects.contains(subject)){
+			List<String> hps=zk.getChildren(subject);
+			Handler.updateHostAndPort(hps, type);
+			zk.subscribeChildChanges(subject, l);
+		}
+		
+		
 	}
 
 }

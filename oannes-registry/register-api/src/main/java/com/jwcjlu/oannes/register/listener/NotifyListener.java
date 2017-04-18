@@ -1,11 +1,9 @@
 package com.jwcjlu.oannes.register.listener;
 
-import java.util.List;
+import org.I0Itec.zkclient.IZkChildListener;
 
-import com.jwcjlu.oannes.common.URL;
-
-public interface NotifyListener {
+public interface NotifyListener<T>  extends IZkChildListener{
 	
-	void notify(List<URL> urls);
+
 	
 }

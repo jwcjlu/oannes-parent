@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -28,7 +29,7 @@ import com.jwcjlu.oannes.config.ServiceBean;
 
 
 public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostProcessor,BeanPostProcessor, ApplicationContextAware {
-   // private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BeanScannerConfigurer.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BeanScannerConfigurer.class);
 	private ApplicationContext applicationContext;
     private String id;
     private  ManagedMap parameters;
