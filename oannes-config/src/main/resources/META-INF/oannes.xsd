@@ -9,13 +9,35 @@
 			<xsd:documentation><![CDATA[ The annotation config ]]></xsd:documentation> 
 		</xsd:annotation>
 	</xsd:element> 
-		<xsd:complexType name="annotationType">
+	<xsd:complexType name="annotationType">
 		<xsd:attribute name="id" type="xsd:ID">
 			<xsd:annotation>
 				<xsd:documentation><![CDATA[ The unique identifier for a bean. ]]></xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attribute name="basePackage" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The scan package. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:element name="register" type="registerType">
+		<xsd:annotation> 
+			<xsd:documentation><![CDATA[ The annotation config ]]></xsd:documentation> 
+		</xsd:annotation>
+	</xsd:element>
+		<xsd:complexType name="registerType">
+		<xsd:attribute name="id" type="xsd:ID">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The unique identifier for a bean. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="register" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The scan package. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="port" type="xsd:string" use="optional">
 			<xsd:annotation>
 				<xsd:documentation><![CDATA[ The scan package. ]]></xsd:documentation>
 			</xsd:annotation>
