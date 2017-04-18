@@ -9,7 +9,7 @@ import com.jwcjlu.oannes.config.OannConsumer;
 
 @Service
 public class DemoAction {
-	@OannConsumer(interfaces=DemoService.class,host="10.10.152.208")
+	@OannConsumer(interfaces=DemoService.class)
 	private DemoService demoService;
 	public void start() throws Exception {
         for (int i = 0; i < Integer.MAX_VALUE; i ++) {

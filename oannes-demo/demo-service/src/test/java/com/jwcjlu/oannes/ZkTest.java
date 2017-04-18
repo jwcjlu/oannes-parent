@@ -6,9 +6,9 @@ public class ZkTest {
 	public static void main(String[] args) {
 	   
 	        ZkClient zkClient = new ZkClient("127.0.0.1:2181");
-	        zkClient.create("/aaaa", "sfsd");
+	        /*    zkClient.create("/aaaa", "sfsd");
 	        
-	        /*
+	  
 	        zkClient.subscribeChildChanges("/action", new IZkChildListener() {
 
 				@Override

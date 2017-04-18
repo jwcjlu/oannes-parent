@@ -1,7 +1,5 @@
 package com.jwcjlu.oannes.common;
 
-import java.util.Map;
-
 public class URL {
 	private final String host;
 
@@ -9,24 +7,25 @@ public class URL {
 
 	private final String path;
 	
-	private final Map<String, String> parameters;
-    protected URL() {
+	private final String persisPath;
+	
+	
+
+	public URL() {
         this.host = "127.0.0.1";
         this.port = 8888;
         this.path = null;
-        this.parameters = null;
+    
+        this.persisPath="";
     }
-    public URL(String path,Map<String, String> parameters){
-    	  this.host = "127.0.0.1";
-          this.port = 8888;
-          this.path = path;
-          this.parameters = parameters;
+    public URL(String path,String persisPath){
+        this("127.0.0.1",8888,path,persisPath);
     }
-    public URL(String  host,int port,String path,Map<String, String> parameters){
+    public URL(String  host,int port,String path,String persisPath){
   	    this.host = host;
         this.port = port;
         this.path = path;
-        this.parameters = parameters;
+        this.persisPath=persisPath;
   }
 	public String getHost() {
 		return host;
@@ -37,8 +36,9 @@ public class URL {
 	public String getPath() {
 		return path;
 	}
-	public Map<String, String> getParameters() {
-		return parameters;
+
+	public String getPersisPath() {
+		return persisPath;
 	}
     
 }

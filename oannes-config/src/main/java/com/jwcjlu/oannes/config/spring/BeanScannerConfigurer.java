@@ -1,12 +1,13 @@
 package com.jwcjlu.oannes.config.spring;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -22,6 +23,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import com.jwcjlu.oannes.config.ConsumerBean;
 import com.jwcjlu.oannes.config.OannConsumer;
 import com.jwcjlu.oannes.config.OannService;
+import com.jwcjlu.oannes.config.RegisterBean;
 import com.jwcjlu.oannes.config.ServiceBean;
 
 
@@ -73,6 +75,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 			 serv.setInterfaces(type);
 			 serv.setHost(oService.host());
 			 serv.setPort(oService.port());
+			 serv.setRegisterBean(applicationContext.getBean(RegisterBean.class));
 			 try {
 				serv.afterPropertiesSet();
 			} catch (Exception e) {
@@ -89,7 +92,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 		 if (! isMatchPackage(bean)) {
 	            return bean;
 	        }
-	      /*  Method[] methods = bean.getClass().getMethods();
+	        Method[] methods = bean.getClass().getMethods();
 	        for (Method method : methods) {
 	            String name = method.getName();
 	            if (name.length() > 3 && name.startsWith("set")
@@ -105,10 +108,9 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 		                	}
 	                	}
 	                } catch (Throwable e) {
-	                    logger.error("Failed to init remote service reference at method " + name + " in class " + bean.getClass().getName() + ", cause: " + e.getMessage(), e);
 	                }
 	            }
-	        }*/
+	        }
 	        Field[] fields = bean.getClass().getDeclaredFields();
 	        for (Field field : fields) {
 	            try {
@@ -169,6 +171,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
     	consumer.setHost(reference.host());
     	consumer.setPort(reference.port());
     	consumer.setInterfaces(reference.interfaces());
+    	consumer.setRegisterBean(applicationContext.getBean(RegisterBean.class));
 		return consumer.getObject();
 	}
 	

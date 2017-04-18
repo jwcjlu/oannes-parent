@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.jwcjlu.oannes.config.OannService;
 
-@OannService(interfaces=DemoService.class,host="10.10.152.208")
+@OannService(interfaces=DemoService.class)
 public class DemoServiceImpl implements DemoService {
 	@Override
 	public String sayHello(String msg) {

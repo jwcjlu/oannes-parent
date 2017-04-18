@@ -20,7 +20,7 @@ public class OannesBeanDefinitionParser implements BeanDefinitionParser {
     
     private final boolean required;
 
-	public OannesBeanDefinitionParser(Class<BeanScannerConfigurer> beanClass, boolean required) {
+	public OannesBeanDefinitionParser(Class<?> beanClass, boolean required) {
 		// TODO Auto-generated constructor stub
 		this.beanClass=beanClass;
 		this.required=required;
