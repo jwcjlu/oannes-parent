@@ -5,5 +5,5 @@
     <artifactId>oannes-registry</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>registry-zookeeper</artifactId>
+  <artifactId>register-api</artifactId>
 </project>
