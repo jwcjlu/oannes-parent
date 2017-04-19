@@ -11,9 +11,9 @@ public class DemoServiceImpl implements DemoService {
 	@Override
 	public String sayHello(String msg) {
 		// TODO Auto-generated method stub
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] Hello " + msg + ", request from provider: "+NetUtil.getRemoteAddress() );
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] Hello " + msg  );
 
-		return "response return ["+msg+"]";
+		return "response return ["+msg+"] request from provider: "+NetUtil.getRemoteAddress();
 	}
 
 }
