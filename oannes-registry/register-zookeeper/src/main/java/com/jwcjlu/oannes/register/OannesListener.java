@@ -2,10 +2,16 @@ package com.jwcjlu.oannes.register;
 
 import java.util.List;
 
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jwcjlu.oannes.common.Handler;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
 
 public class OannesListener<T> implements NotifyListener<T> {
+	private Logger log=LoggerFactory.getLogger(OannesListener.class);
 	private Class<T> type;
 	public OannesListener(Class<T> t){
 		this.type=t;
@@ -16,6 +22,7 @@ public class OannesListener<T> implements NotifyListener<T> {
 			throws Exception {
 		// TODO Auto-generated method stub
 			// TODO Auto-generated method stub
+		    log.info(type+"更新为：【"+currentChilds+"】");
 			Handler.updateHostAndPort(currentChilds, type);
 			
 		
