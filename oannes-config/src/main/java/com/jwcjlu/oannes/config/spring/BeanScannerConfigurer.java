@@ -173,6 +173,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
     	consumer.setPort(reference.port());
     	consumer.setInterfaces(reference.interfaces());
     	consumer.setRegisterBean(applicationContext.getBean(RegisterBean.class));
+    	consumer.afterPropertiesSet();
 		return consumer.getObject();
 	}
 	

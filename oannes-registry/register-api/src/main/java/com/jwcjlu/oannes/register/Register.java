@@ -15,5 +15,7 @@ public interface Register {
 	void unSubscribe(List<URL> urls,NotifyListener l);
 	 
 	void subscribe(String subject,NotifyListener l,Class type);
+	
+	List<String> getChildForPath(String path);
 
 }

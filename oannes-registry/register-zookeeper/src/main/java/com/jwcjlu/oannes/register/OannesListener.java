@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jwcjlu.oannes.common.Handler;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
+import com.jwcjlu.oannes.transport.ProxyHandler;
 
 public class OannesListener<T> implements NotifyListener<T> {
 	private Logger log=LoggerFactory.getLogger(OannesListener.class);
@@ -23,7 +24,7 @@ public class OannesListener<T> implements NotifyListener<T> {
 		// TODO Auto-generated method stub
 			// TODO Auto-generated method stub
 		    log.info(type+"更新为：【"+currentChilds+"】");
-			Handler.updateHostAndPort(currentChilds, type);
+			ProxyHandler.updateHostAndPort(currentChilds, type);
 			
 		
 	}

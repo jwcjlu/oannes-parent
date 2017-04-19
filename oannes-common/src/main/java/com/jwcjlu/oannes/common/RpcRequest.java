@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class RpcRequest implements Serializable{
 	private static final long serialVersionUID = 1L;
+	private String id;
 	private Class<?> type;
 	private Object[] args;
 	private String method;
@@ -41,4 +42,13 @@ public class RpcRequest implements Serializable{
 	public void setParameterTypes(Class<?>[] parameterTypes) {
 		this.parameterTypes = parameterTypes;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

@@ -1,14 +1,7 @@
 package com.jwcjlu.oannes.config;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,17 +10,18 @@ import org.springframework.context.ApplicationContext;
 
 import com.jwcjlu.oannes.common.Constants;
 import com.jwcjlu.oannes.common.NetUtil;
-import com.jwcjlu.oannes.common.RpcRequest;
-import com.jwcjlu.oannes.common.RpcResponse;
 import com.jwcjlu.oannes.common.URL;
 import com.jwcjlu.oannes.register.Register;
 import com.jwcjlu.oannes.register.ZookeeperRegister;
+import com.jwcjlu.oannes.transport.NettyServer;
+import com.jwcjlu.oannes.transport.Server;
 
 public class ServiceBean<T> extends ConfigBean implements InitializingBean{
 	/**
 	 * 
 	 */
 	private static ExecutorService  service=Executors.newFixedThreadPool(10);
+	private static Server server;
 	private  static  volatile boolean export=false;
 	private static final long serialVersionUID = 1L;
 	private static ApplicationContext context;
@@ -44,7 +38,40 @@ public class ServiceBean<T> extends ConfigBean implements InitializingBean{
 		lock.lock();
 		try{
 			if(!export){
-				export();
+				new Thread(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							export();
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (NoSuchMethodException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SecurityException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+				}
+				).start();
+			
 				export=true;
 			}
 			RegisterBean registerBean=context.getBean(RegisterBean.class);
@@ -61,9 +88,11 @@ public class ServiceBean<T> extends ConfigBean implements InitializingBean{
 		
 	}
 	@SuppressWarnings("unchecked")
-	private void export() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		service.execute(new Runnable() {
-			
+	private final void export() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		RegisterBean registerBean=context.getBean(RegisterBean.class);
+		int port=Integer.valueOf(registerBean.getString("port"));
+		server=new NettyServer(NetUtil.getRemoteAddress().getHostAddress(), port);
+		/*	service.execute(new Runnable() {
 			@Override
 			public void run() {
 				try{
@@ -95,7 +124,7 @@ public class ServiceBean<T> extends ConfigBean implements InitializingBean{
 				}
 				
 			}
-		});
+		});*/
 		
 		
 	}

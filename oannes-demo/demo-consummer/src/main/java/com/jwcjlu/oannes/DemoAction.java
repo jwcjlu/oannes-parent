@@ -19,7 +19,7 @@ public class DemoAction {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Thread.sleep(2000);
+            Thread.sleep(6000);
         }
 	}
 	public DemoService getDemoService() {

@@ -9,6 +9,7 @@ import org.I0Itec.zkclient.ZkClient;
 import com.jwcjlu.oannes.common.Handler;
 import com.jwcjlu.oannes.common.URL;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
+import com.jwcjlu.oannes.transport.ProxyHandler;
 
 public class ZookeeperRegister implements Register{
 	private static List<String>subjects=new ArrayList<String>();
@@ -71,11 +72,16 @@ public class ZookeeperRegister implements Register{
 		// TODO Auto-generated method stub
 		if(!subjects.contains(subject)){
 			List<String> hps=zk.getChildren(subject);
-			Handler.updateHostAndPort(hps, type);
+			ProxyHandler.updateHostAndPort(hps, type);
 			zk.subscribeChildChanges(subject, l);
 		}
 		
 		
+	}
+	@Override
+	public List<String> getChildForPath(String path) {
+		// TODO Auto-generated method stub
+		return zk.getChildren(path);
 	}
 
 }
