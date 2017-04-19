@@ -13,6 +13,23 @@
     <artifactId>demo-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </dependency>
-  
+   <dependency>
+  	<groupId>com.oannes</groupId>
+  	<artifactId>oannes-config</artifactId>
+  	<version>1.0.0-SNAPSHOT</version>
+  </dependency>
+
+  <dependency>
+  	<groupId>com.github.sgroschupf</groupId>
+  	<artifactId>zkclient</artifactId>
+  	<version>${zkclient_version}</version>
+
+  </dependency>
+  <dependency>
+  	<groupId>org.slf4j</groupId>
+  	<artifactId>slf4j-log4j12</artifactId>
+  	<version>${slf4j_version}</version>
+
+  </dependency>
   </dependencies>
 </project>

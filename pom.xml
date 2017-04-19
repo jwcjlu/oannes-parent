@@ -35,7 +35,7 @@
 		<jcl_version>1.1</jcl_version>
 		<log4j_version>1.2.14</log4j_version>
 		<jcl_version>1.1</jcl_version>
-		<zookeeper_version>3.4.7</zookeeper_version>
+		<zookeeper_version>3.4.6</zookeeper_version>
 		<zkclient_version>0.1</zkclient_version>
 		<fastjson_version>1.1.41</fastjson_version>
    </properties>
