@@ -11,8 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.jwcjlu.oannes.common.RpcRequest;
 
 public class ProxyHandler implements InvocationHandler{
+
 private  static AtomicInteger  incrementGet=new AtomicInteger(0); 
-private static List<Client> clients=new Vector<Client>(100);
+private static volatile List<Client> clients=new Vector<Client>(100);
 private Class<?> type;
 public ProxyHandler(Class<?> type){
 	this.type=type;
@@ -26,17 +27,24 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 	req.setMethod(method.getName());
 	req.setParameterTypes(method.getParameterTypes());
 	req.setType(type);
-	
+	Client client=selectClient();
+	if(client==null){
+		System.out.println(" no user provider");
+		return null;
+	}
 
-	return selectClient().request(req).get();
+	return client.request(req).get();
 	
 }
    private Client selectClient(){
+	   if(clients.size()==0){
+		   return null;
+	   }
 
 	return clients.get(incrementGet.incrementAndGet()%clients.size());
 	
 }
-public static void  updateHostAndPort(List<String> hostAndPorts,Class<?>type){
+public synchronized static void  updateHostAndPort(List<String> hostAndPorts,Class<?>type){
 	List<Client>removeClient=new ArrayList<Client>();
 	for(Client c:clients){
 		if(hostAndPorts.contains(c.getKey())){
@@ -58,16 +66,17 @@ public static void  updateHostAndPort(List<String> hostAndPorts,Class<?>type){
 	}
 	
 }
-public static void addClient(final String hostAndPort){
-	new Thread(new Runnable(){
+public static void addClient(String hostAndPort){
+	
+	 String []hap=hostAndPort.split(":");
+	// TODO Auto-generated method stub
+	final Client client=new NettyClient(hap[0],Integer.valueOf(hap[1]));
+	clients.add(client);
+	System.out.println(hostAndPort+"[client  is ready  start!]");
 
+	new Thread(new Runnable(){
 		@Override
 		public void run() {
-			System.out.println(hostAndPort+"[client  is ready  start!]");
-			 String []hap=hostAndPort.split(":");
-			// TODO Auto-generated method stub
-			Client client=new NettyClient(hap[0],Integer.valueOf(hap[1]));
-			clients.add(client);
 			try {
 				client.connect();
 			} catch (RemoteException e) {
@@ -78,7 +87,9 @@ public static void addClient(final String hostAndPort){
 		}
 		
 	}).start();
+	
 }
+
 
 	
 }

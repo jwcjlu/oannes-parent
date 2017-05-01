@@ -166,14 +166,14 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 	public void setParameters(ManagedMap parameters) {
 		this.parameters = parameters;
 	}
-    private Object refer(OannConsumer reference, Class<?> type) throws Exception {
+    private  Object refer(OannConsumer reference, Class<?> type) throws Exception {
 			// TODO Auto-generated method stub
     	ConsumerBean<Object> consumer=new ConsumerBean<Object>();
     	consumer.setHost(reference.host());
     	consumer.setPort(reference.port());
     	consumer.setInterfaces(reference.interfaces());
     	consumer.setRegisterBean(applicationContext.getBean(RegisterBean.class));
-    	consumer.afterPropertiesSet();
+    	//consumer.afterPropertiesSet();
 		return consumer.getObject();
 	}
 	

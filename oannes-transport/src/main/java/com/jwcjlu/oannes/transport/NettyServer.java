@@ -47,7 +47,7 @@ public class NettyServer extends AbstractServer{
 		});
 		ChannelFuture f= serBootstrap.bind().sync();
 		
-		System.out.println(EchoServer.class.getName() + "started and listen on “" + f.channel(
+		System.out.println(NettyServer.class.getName() + "started and listen on “" + f.channel(
 				).localAddress());
 		f.channel().closeFuture().sync();
 	  }catch(Exception e){

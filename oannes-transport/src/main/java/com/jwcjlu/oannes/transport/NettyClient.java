@@ -1,5 +1,7 @@
 package com.jwcjlu.oannes.transport;
 
+import java.util.concurrent.TimeUnit;
+
 import com.jwcjlu.oannes.common.RpcRequest;
 import com.jwcjlu.oannes.transport.futrue.DefaultResponseFuture;
 import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
@@ -22,14 +24,14 @@ public class NettyClient extends AbstractClient{
 
 	public NettyClient(String host, int port) {
 		super(host, port);
-	    key=host+port;
+	    key=host+":"+port;
 	}
 
 
 	@Override
 	public boolean isConnected() throws RemoteException {
 		// TODO Auto-generated method stub
-		return false;
+		return channel!=null&&channel.isWritable();
 	}
 
 	@Override
@@ -43,19 +45,19 @@ public class NettyClient extends AbstractClient{
 		// TODO Auto-generated method stub
 		ChannelFuture f;
 		try {
+			
 		f = bootstrap.connect().sync();
 			channel=f.channel();
 			channel.closeFuture().sync();
-			
-		} catch (InterruptedException e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}finally {
+			reconnect();
 			try {
-				group.shutdownGracefully().sync();
+				TimeUnit.SECONDS.sleep(5);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		
@@ -75,7 +77,7 @@ public class NettyClient extends AbstractClient{
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
 				ch.pipeline()
-				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 5))
+				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 15))
 				.addLast( MarshallingCodeCFactory.buildMarshallingDecoder())
 				.addLast( MarshallingCodeCFactory.buildMarshallingEncoder())
 				.addLast(new ClientHandler())
@@ -125,15 +127,32 @@ public class NettyClient extends AbstractClient{
 	@Override
 	protected void doReconnect() {
 		// TODO Auto-generated method stub
+		try {
+			if(isConnected()){
+				return;
+			}
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if(channel!=null){
 			try {
+				System.out.println("开始重连！！！");
 				channel.disconnect().sync();
-				doConnect();
-			} catch (InterruptedException e) {
+				super.connect();
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+		}else{
+			System.out.println("dafdsafsd");
+			try {
+				super.connect();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}

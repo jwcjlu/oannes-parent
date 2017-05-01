@@ -36,7 +36,7 @@ public abstract class AbstractClient implements Client {
 			if (!isConnected()) {
 				throw new RemoteException("Failed connect to server " + getConnectAddress() + " from "
 						+ getClass().getSimpleName() + " " + NetUtil.LOCALHOST.getHostAddress()
-						+ " using dubbo version " + ", cause: Connect wait timeout: " + "ms.");
+						 + ", cause: Connect wait timeout: " + "ms.");
 			}
 		} catch (RemoteException e) {
 			throw e;
@@ -48,6 +48,7 @@ public abstract class AbstractClient implements Client {
 	@Override
 	public void reconnect() {
 		// TODO Auto-generated method stub
+		doReconnect();
 
 	}
 

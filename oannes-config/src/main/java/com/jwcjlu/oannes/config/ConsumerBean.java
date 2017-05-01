@@ -5,6 +5,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -17,7 +18,7 @@ import com.jwcjlu.oannes.transport.ProxyHandler;
 
 
 public class ConsumerBean <T> extends ConfigBean implements FactoryBean<T>,InitializingBean{
-	private static volatile Set<String> exsitsRegists=new HashSet<String>();
+	private volatile static boolean subscribe=false;
 	private static ReentrantLock lock=new ReentrantLock();
 	/**
 	 * 
@@ -32,8 +33,12 @@ public class ConsumerBean <T> extends ConfigBean implements FactoryBean<T>,Initi
 		 RegisterBean  rb=getRegisterBean();
 		 ZookeeperRegister  zr=ZookeeperRegister.getInstance(rb.getString("register"));
 		 String subject="/"+Constants.ROOT+"/"+getInterfaces().getName()+"/"+Constants.PROVIDER;
-		 zr.subscribe(subject, new OannesListener<T>(getInterfaces()),getInterfaces());
-		return (T) Proxy.newProxyInstance(ConsumerBean.class.getClassLoader(),interfaces ,  handler);
+		if(!subscribe){
+			subscribe=true;
+		  zr.subscribe(subject, new OannesListener<T>(getInterfaces()),getInterfaces());
+		  TimeUnit.SECONDS.sleep(2);
+		}
+		return (T) Proxy.newProxyInstance(ConsumerBean.class.getClassLoader(),interfaces ,handler);
 	}
 
 	@Override
@@ -51,21 +56,7 @@ public class ConsumerBean <T> extends ConfigBean implements FactoryBean<T>,Initi
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
-		lock.lock();
-		try{
-		 RegisterBean  rb=getRegisterBean();
-		 ZookeeperRegister  zr=ZookeeperRegister.getInstance(rb.getString("register"));
-		 String path="/"+Constants.ROOT+"/"+getInterfaces().getName()+"/"+Constants.PROVIDER;
-		 List<String>subNodes=zr.getChildForPath(path);
-		 for(String hostAndPort:subNodes){
-			 if(!exsitsRegists.contains(hostAndPort)){
-				 exsitsRegists.add(hostAndPort);
-				 ProxyHandler.addClient(hostAndPort);
-			 }
-		 }
-		}finally{
-			lock.unlock();
-		}
+	
 	}
 
 }
