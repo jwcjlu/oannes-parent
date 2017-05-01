@@ -19,6 +19,10 @@
     <artifactId>zookeeper</artifactId>
     <version>${zookeeper_version}</version>
 </dependency>
-  
+      <dependency>
+  <groupId>com.oannes</groupId>
+    <artifactId>oannes-transport</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </dependency>
   </dependencies>
 </project>

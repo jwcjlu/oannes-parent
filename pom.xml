@@ -38,6 +38,7 @@
 		<zookeeper_version>3.4.6</zookeeper_version>
 		<zkclient_version>0.1</zkclient_version>
 		<fastjson_version>1.1.41</fastjson_version>
+		<netty_version>4.1.6.Final</netty_version>
    </properties>
   <dependencies>
   <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
@@ -83,6 +84,10 @@
 			    <artifactId>fastjson</artifactId>
 			    <version>${fastjson_version}</version>
 			</dependency>
-			
+			<dependency>
+	    <groupId>io.netty</groupId>
+	    <artifactId>netty-all</artifactId>
+	    <version>${netty_version}</version>
+	</dependency>
   </dependencies>
 </project>
