@@ -5,19 +5,21 @@ import java.net.SocketAddress;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.jwcjlu.oannes.common.NetUtil;
+import com.jwcjlu.oannes.transport.exchange.ExchangeServer;
+import com.oannes.common.NetUtil;
 
 import io.netty.channel.Channel;
 
 public abstract class AbstractServer implements Server {
 
     private InetSocketAddress              localAddress;
-
+    protected  ExchangeServer server;
     private InetSocketAddress              bindAddress;
 	private ConcurrentHashMap<SocketAddress,Channel> channels=new ConcurrentHashMap<SocketAddress,Channel>();
 	public abstract void doOpen();
-	public AbstractServer(String host,int port){
+	public AbstractServer(String host,int port, ExchangeServer server){
 		bindAddress=new InetSocketAddress(host,port);
+		this.server=server;
 		doOpen();
 		
 	}

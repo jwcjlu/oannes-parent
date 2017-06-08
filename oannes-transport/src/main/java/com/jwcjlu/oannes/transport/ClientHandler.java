@@ -1,7 +1,8 @@
 package com.jwcjlu.oannes.transport;
 
-import com.jwcjlu.oannes.common.RpcResponse;
+import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.jwcjlu.oannes.transport.futrue.DefaultResponseFuture;
+import com.oannes.common.RpcResponse;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -9,6 +10,10 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
 public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse>{
+	private ExchangeClient client;
+	public ClientHandler(ExchangeClient client){
+		this.client=client;
+	}
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, RpcResponse msg) throws Exception {
@@ -31,5 +36,14 @@ public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse>{
 	                System.out.println("all idle");  
 	        } 
 	}
+
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		// TODO Auto-generated method stub
+		super.channelActive(ctx);
+		System.out.println("dsafsdf");
+		client.countDown();
+	}
+	
 
 }

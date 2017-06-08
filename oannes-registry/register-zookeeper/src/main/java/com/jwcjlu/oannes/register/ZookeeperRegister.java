@@ -3,85 +3,179 @@ package com.jwcjlu.oannes.register;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import org.I0Itec.zkclient.ZkClient;
-
-import com.jwcjlu.oannes.common.Handler;
-import com.jwcjlu.oannes.common.URL;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
-import com.jwcjlu.oannes.transport.ProxyHandler;
+import com.oannes.common.Constants;
+import com.oannes.common.URL;
 
-public class ZookeeperRegister implements Register{
-	private static List<String>subjects=new ArrayList<String>();
+public class ZookeeperRegister extends FailbackRegistry {
+
+	private ZkClient client;
 	private static ZookeeperRegister register;
-	public static ZookeeperRegister  getInstance(String zkConfig){
-		if(register!=null){
+	private final static String DEFAULT_ROOT = "oannes";
+
+	private final String root;
+	private final ConcurrentMap<URL, ConcurrentMap<NotifyListener, ChildListener>> zkListeners = new ConcurrentHashMap<URL, ConcurrentMap<NotifyListener, ChildListener>>();
+
+	public static ZookeeperRegister getInstance(URL url) {
+		if (register != null) {
 			return register;
-		}else{
-			register=new ZookeeperRegister(zkConfig);
+		} else {
+			register = new ZookeeperRegister(url);
 		}
 		return register;
 	}
-	
-	 ZkClient zk;
-	private ZookeeperRegister(String zkConfig){
-	  zk = new ZkClient(zkConfig);
-   }
-	@Override
-	public void register(URL url) {
-		// TODO Auto-generated method stub
-		zk.createPersistent(url.getPersisPath(), true);
-		String []ephemerals=url.getPath().split("/");
-		StringBuilder temp=new StringBuilder("");
-		for(int i=0;i<ephemerals.length;i++){
-			temp.append("/"+ephemerals[i]);
-			zk.createEphemeral(url.getPersisPath()+temp.toString());
+
+	private ZookeeperRegister(URL url) {
+		super(url);
+
+		root = Constants.PATH_SEPARATOR + url.getParameter("root", DEFAULT_ROOT);
+		try {
+			client = new ZkClientService(url);
+			client.addListener(new StateListener() {
+				@Override
+				public void stateChanged(int connected) {
+					// TODO Auto-generated method stub
+					if (connected == StateListener.RECONNECTED) {
+						try {
+							recover();
+						} catch (Exception e) {
+						}
+					}
+
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 		}
-		
 	}
 
 	@Override
-	public void unRegister(URL url) {
+	public List<String> getChildForPath(String path) throws Exception {
 		// TODO Auto-generated method stub
-		zk.delete(url.getPath());
+		return client.getChilder(path);
+	}
+
+	private String toCategoryPath(URL url) {
+		return toServicePath(url) + Constants.PATH_SEPARATOR
+				+ url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);
+	}
+
+	private String toUrlPath(URL url) {
+		return toCategoryPath(url) + Constants.PATH_SEPARATOR;
+	}
+
+	private String toServicePath(URL url) {
+		String name = url.getServiceInterface();
+
+		return toRootDir() + URL.encode(name);
+	}
+	private String toProviderPath(URL url){
+		return toServicePath(url)+Constants.PATH_SEPARATOR+Constants.PROVIDERS_CATEGORY
+				+Constants.PATH_SEPARATOR+URL.encode(url.getUrl());
+	}
+	private String toSubProviderPath(URL url){
+		return toServicePath(url)+Constants.PATH_SEPARATOR+Constants.PROVIDERS_CATEGORY;
+				
+	}
+	private String toConsummerPath(URL url){
+		return toServicePath(url)+Constants.PATH_SEPARATOR+Constants.CONSUMERS_CATEGORY
+				+Constants.PATH_SEPARATOR+url.getUrl();
+				
+	}
+
+	private String toRootDir() {
+		if (root.equals(Constants.PATH_SEPARATOR)) {
+			return root;
+		}
+		return root + Constants.PATH_SEPARATOR;
+	}
+
+	@SuppressWarnings("unused")
+	private String toRootPath() {
+		return root;
 	}
 
 	@Override
-	public void subscribe(List<URL> urls, NotifyListener l) {
+	protected void doRegister(URL url) throws Exception {
 		// TODO Auto-generated method stub
 	
+			client.createEphrmeralNode(toProviderPath(url), "");
 		
 	}
 
 	@Override
-	public void unSubscribe(List<URL> urls, NotifyListener l) {
+	protected void doUnregister(URL url) throws Exception {
 		// TODO Auto-generated method stub
-		
+		client.deleteNode(url.getPath());
+
 	}
-	public  void  createPersistent(String path,boolean createParent){
-		zk.createPersistent(path, createParent);
-	}
-	public static void main(String[] args) throws IOException {
-		ZookeeperRegister zk = new ZookeeperRegister("192.168.1.125:2181");
-		
-		zk.createPersistent("/dubbo/oannes/ddd", true);
-		System.in.read();
-	}
+
 	@Override
-	public void subscribe(String subject, NotifyListener l,Class type) {
+	protected void doSubscribe(final URL url, final NotifyListener listener) throws RpcException {
 		// TODO Auto-generated method stub
-		if(!subjects.contains(subject)){
-			List<String> hps=zk.getChildren(subject);
-			ProxyHandler.updateHostAndPort(hps, type);
-			zk.subscribeChildChanges(subject, l);
+		try {
+
+			List<URL> urls = new ArrayList<URL>();
+		    String path=toSubProviderPath(url);
+				ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
+				if (listeners == null) {
+					zkListeners.putIfAbsent(url, new ConcurrentHashMap<NotifyListener, ChildListener>());
+					listeners = zkListeners.get(url);
+				}
+				ChildListener zkListener = listeners.get(listener);
+				if (zkListener == null) {
+					listeners.putIfAbsent(listener, new ChildListener() {
+						public void childChanged(String parentPath, List<String> currentChilds) {
+							ZookeeperRegister.this.notify(url, listener,
+									toUrlsWithEmpty(url, parentPath, currentChilds));
+						}
+					});
+					zkListener = listeners.get(listener);
+				}
+				//client.createEphrmeralNode(toConsummerPath(url), "");
+				List<String> children = client.addChildListener(path, zkListener);
+				if (children != null) {
+					urls.addAll(toUrlsWithEmpty(url, path, children));
+				}
+			
+			notify(url, listener, urls);
+
+		} catch (Throwable e) {
+
+			throw new RpcException(
+					"Failed to subscribe " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
+
 		}
-		
-		
-	}
-	@Override
-	public List<String> getChildForPath(String path) {
-		// TODO Auto-generated method stub
-		return zk.getChildren(path);
+
 	}
 
+	private List<String> toCategoriesPath(URL url) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<URL> toUrlsWithEmpty(URL url, String path, List<String> children) {
+		// TODO Auto-generated method stub
+		List<URL> urls=new ArrayList<URL>();
+		for(String value:children){
+			URL u=URL.valueOf(URL.decode(value));
+			urls.add(u);
+		}
+		return urls;
+	}
+
+	@Override
+	protected void doUnsubscribe(URL url, NotifyListener listener) {
+		// TODO Auto-generated method stub
+		  ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
+	        if (listeners != null) {
+	            ChildListener zkListener = listeners.get(listener);
+	            if (zkListener != null) {
+	                client.removeChildListener(toUrlPath(url), zkListener);
+	            }
+	        }
+	}
 }

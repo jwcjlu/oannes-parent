@@ -1,4 +1,4 @@
-package com.jwcjlu.oannes.common;
+package com.oannes.common;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

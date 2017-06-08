@@ -3,8 +3,8 @@ package com.jwcjlu.oannes;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.jwcjlu.oannes.common.NetUtil;
 import com.jwcjlu.oannes.config.OannService;
+import com.oannes.common.NetUtil;
 
 @OannService(interfaces=DemoService.class)
 public class DemoServiceImpl implements DemoService {

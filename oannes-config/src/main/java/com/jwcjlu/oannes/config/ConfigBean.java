@@ -3,13 +3,20 @@ package com.jwcjlu.oannes.config;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.springframework.beans.factory.support.ManagedMap;
+import com.oannes.common.Constants;
+import com.oannes.common.NetUtil;
+import com.oannes.common.URL;
+import com.oannes.common.util.MapSortUtil;
+import com.oannes.common.util.StringUtils;
 
-public class ConfigBean implements Serializable{
+public abstract class ConfigBean  implements Serializable{
 
 	/**
 	 * 
@@ -22,7 +29,9 @@ public class ConfigBean implements Serializable{
 	protected String provider;
 	protected String host;
 	protected int port;
-	protected RegisterBean registerBean;
+	protected String path;
+
+	protected Map<String,Object> parameter=new HashMap<String,Object>();
 
 	public String getId() {
 		return id;
@@ -54,13 +63,64 @@ public class ConfigBean implements Serializable{
 	public void setPort(int port) {
 		this.port = port;
 	}
-	public RegisterBean getRegisterBean() {
-		return registerBean;
+	public void setter(OannService service){
+		parameter.put("backupAddress", service.backupAddress());
+		parameter.put("group", service.group());
+		parameter.put("interface", service.interfaces().getName());
+		parameter.put("version", service.version());
+		parameter.put("port", service.port());
+		port=service.port();
+		host=NetUtil.getRemoteAddress().getHostAddress();
+		parameter.put("host",host );
+		path=service.interfaces().getName();
 	}
-	public void setRegisterBean(RegisterBean registerBean) {
-		this.registerBean = registerBean;
+	public void setter(OannConsumer consumer){
+		parameter.put("backupAddress", consumer.backupAddress());
+		parameter.put("group", consumer.group());
+		path=consumer.interfaces().getName();
+		parameter.put("interface", consumer.interfaces().getName());
+		parameter.put("version", consumer.version());
+		parameter.put("port", consumer.port());
+		parameter.put("host", consumer.host());
+		port=consumer.port();
+			
 	}
-
+   @SuppressWarnings("rawtypes")
+public  URL builderURL(){
+	   StringBuilder sb=new StringBuilder(Constants.ROOT+"://"+host+":"+port);
+	   sb.append(Constants.PATH_SEPARATOR).append(path);
+	   Map<String,Object> map=MapSortUtil.sortMapByKey(parameter);
+	   boolean isFirst=true;
+	   Iterator iter=map.entrySet().iterator();  
+	   while(iter.hasNext()){
+		 Map.Entry ent=(Map.Entry )iter.next();  
+       String key=ent.getKey().toString();  
+		   Object obj=ent.getValue();
+		   if(obj!=null){
+			   if(obj instanceof String){
+				   if(StringUtils.isNotEmpty(obj.toString())){
+					   if (isFirst) {
+						sb.append("?").append(key).append("=").append(obj);
+						isFirst=false;
+					}
+				   }
+			   }else{
+			   if(isFirst){
+				   sb.append("?").append(key).append("=").append(obj);
+					isFirst=false;
+			   }else{
+				   sb.append("&").append(key).append("=").append(obj);  
+			   }
+			   }
+		   }
+	   }
+	   URL url=URL.valueOf(sb.toString());
 	
+	  return url;
+   }
+   public void setAttribute(String key,Object obj){
+	   parameter.put(key, obj);
+   }
+ 
 
 }

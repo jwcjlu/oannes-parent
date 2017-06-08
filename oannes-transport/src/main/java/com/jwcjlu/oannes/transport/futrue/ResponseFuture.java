@@ -1,7 +1,7 @@
 package com.jwcjlu.oannes.transport.futrue;
 
-import com.jwcjlu.oannes.common.RpcResponse;
 import com.jwcjlu.oannes.transport.RemoteException;
+import com.oannes.common.RpcResponse;
 
 public interface ResponseFuture {
 	

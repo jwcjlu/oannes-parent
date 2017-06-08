@@ -13,8 +13,8 @@ public @interface OannService {
 	String id() default "";
 	Class interfaces();
 	String group() default "";
-	String provider() default "localhost:2181";
-	String host() default "localhost";
+	String version() default"";
+	String backupAddress() default "localhost:2181";
 	int port() default 8888;
 
 }

@@ -73,11 +73,11 @@
 				<artifactId>commons-logging-api</artifactId>
 				<version>${jcl_version}</version>
 			</dependency>
-			<dependency>
+		<!-- 	<dependency>
 				<groupId>com.github.sgroschupf</groupId>
 				<artifactId>zkclient</artifactId>
 				<version>${zkclient_version}</version>
-			</dependency>
+			</dependency> -->
 			<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
 			<dependency>
 			    <groupId>com.alibaba</groupId>

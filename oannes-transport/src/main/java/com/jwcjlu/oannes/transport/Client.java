@@ -1,7 +1,7 @@
 package com.jwcjlu.oannes.transport;
 
-import com.jwcjlu.oannes.common.RpcRequest;
 import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
+import com.oannes.common.RpcRequest;
 
 public interface Client {
 	void connect()throws RemoteException;

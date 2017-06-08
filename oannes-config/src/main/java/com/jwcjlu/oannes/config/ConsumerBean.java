@@ -1,62 +1,48 @@
 package com.jwcjlu.oannes.config;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
 
-import com.jwcjlu.oannes.common.Constants;
-import com.jwcjlu.oannes.register.OannesListener;
+import com.jwcjlu.oannes.common.proxy.JdkProxy;
+import com.jwcjlu.oannes.common.proxy.JdkProxyHandler;
+import com.jwcjlu.oannes.common.proxy.ProxyFactory;
+import com.jwcjlu.oannes.common.proxy.ProxyHandler;
+import com.jwcjlu.oannes.register.Register;
 import com.jwcjlu.oannes.register.ZookeeperRegister;
-import com.jwcjlu.oannes.transport.ProxyHandler;
+import com.oannes.common.URL;
 
 
-public class ConsumerBean <T> extends ConfigBean implements FactoryBean<T>,InitializingBean{
+public class ConsumerBean <T> extends ConfigBean{
+
 	private volatile static boolean subscribe=false;
 	private static ReentrantLock lock=new ReentrantLock();
-	/**
-	 * 
-	 */
+	private ProxyHandler handler;
+	private RegisterDirection<T> direction;
+	private ApplicationContext context;
+	public ConsumerBean(ApplicationContext context){
+		this.context=context;
+	}
 	private static final long serialVersionUID = 1L;
 
-	@Override
 	public T getObject() throws Exception {
+		OannesProtocol protocol=context.getBean(OannesProtocol.class);
 		// TODO Auto-generated method stub
-		 Class<?>[] interfaces =new Class<?>[]{getInterfaces()};
-		 InvocationHandler handler=new ProxyHandler(getInterfaces());
-		 RegisterBean  rb=getRegisterBean();
-		 ZookeeperRegister  zr=ZookeeperRegister.getInstance(rb.getString("register"));
-		 String subject="/"+Constants.ROOT+"/"+getInterfaces().getName()+"/"+Constants.PROVIDER;
-		if(!subscribe){
-			subscribe=true;
-		  zr.subscribe(subject, new OannesListener<T>(getInterfaces()),getInterfaces());
-		  TimeUnit.SECONDS.sleep(2);
-		}
-		return (T) Proxy.newProxyInstance(ConsumerBean.class.getClassLoader(),interfaces ,handler);
+	    Class<?>[] interfaces =new Class<?>[]{getInterfaces()};
+		handler=new JdkProxyHandler(getInterfaces());
+		Register  register=ZookeeperRegister.getInstance(builderURL());
+		direction=new RegisterDirection<T>();
+		direction.setRegister(register);
+		direction.setProxyHandler(handler);
+		URL url=builderURL();
+		List<URL>urls=new ArrayList<URL>();
+		urls.add(url);
+		register.subscribe(urls, direction);
+		ProxyFactory proxyFacotry=context.getBean(ProxyFactory.class);
+		return (T) new JdkProxy().newProxyInstance(ConsumerBean.class.getClassLoader(),interfaces ,handler);
 	}
 
-	@Override
-	public Class<?> getObjectType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isSingleton() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// TODO Auto-generated method stub
-	
-	}
 
 }

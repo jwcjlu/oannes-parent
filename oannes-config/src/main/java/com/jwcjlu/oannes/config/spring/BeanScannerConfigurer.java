@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import com.jwcjlu.oannes.config.ConsumerBean;
 import com.jwcjlu.oannes.config.OannConsumer;
 import com.jwcjlu.oannes.config.OannService;
@@ -41,6 +42,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
+		SpringBeanUtils.setContext(applicationContext);
 	}
 
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -74,9 +76,9 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 			 Class type=oService.interfaces();
 			 ServiceBean<Object> serv=new ServiceBean<Object>(applicationContext);
 			 serv.setInterfaces(type);
-			 serv.setHost(oService.host());
 			 serv.setPort(oService.port());
-			 serv.setRegisterBean(applicationContext.getBean(RegisterBean.class));
+			 serv.setter(oService);
+			 
 			 try {
 				serv.afterPropertiesSet();
 			} catch (Exception e) {
@@ -168,11 +170,11 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 	}
     private  Object refer(OannConsumer reference, Class<?> type) throws Exception {
 			// TODO Auto-generated method stub
-    	ConsumerBean<Object> consumer=new ConsumerBean<Object>();
-    	consumer.setHost(reference.host());
+    	ConsumerBean<Object> consumer=new ConsumerBean<Object>(applicationContext);
+ 
     	consumer.setPort(reference.port());
     	consumer.setInterfaces(reference.interfaces());
-    	consumer.setRegisterBean(applicationContext.getBean(RegisterBean.class));
+    	consumer.setter(reference);
     	//consumer.afterPropertiesSet();
 		return consumer.getObject();
 	}

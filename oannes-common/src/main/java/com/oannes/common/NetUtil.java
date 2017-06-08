@@ -1,4 +1,4 @@
-package com.jwcjlu.oannes.common;
+package com.oannes.common;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

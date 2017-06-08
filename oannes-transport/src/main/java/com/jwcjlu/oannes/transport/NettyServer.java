@@ -1,5 +1,7 @@
 package com.jwcjlu.oannes.transport;
 
+import com.jwcjlu.oannes.transport.exchange.ExchangeServer;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -7,14 +9,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import netty.in.action.EchoServer;
 
 public class NettyServer extends AbstractServer{
-	public NettyServer(String host, int port) {
-		super(host, port);
-		// TODO Auto-generated constructor stub
+	
+	public NettyServer(String host, int port,ExchangeServer server) {	
+		super(host, port,server);
+		// TODO Auto-generated constructor stub	
 	}
-
 	private  ServerBootstrap  serBootstrap;
 
 	@Override
@@ -33,14 +34,13 @@ public class NettyServer extends AbstractServer{
 		serBootstrap.group(boss, worker);
 		serBootstrap.localAddress(getBindAddress()).channel(NioServerSocketChannel.class)
 		.childHandler(new ChannelInitializer<SocketChannel>() {
-
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
 				ch.pipeline()
 				.addLast( MarshallingCodeCFactory.buildMarshallingDecoder())
 				.addLast( MarshallingCodeCFactory.buildMarshallingEncoder())
-				.addLast(new ServerHandler())
+				.addLast(new ServerHandler(server))
 				;
 				
 			}

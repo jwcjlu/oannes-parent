@@ -2,9 +2,10 @@ package com.jwcjlu.oannes.transport;
 
 import java.util.concurrent.TimeUnit;
 
-import com.jwcjlu.oannes.common.RpcRequest;
+import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.jwcjlu.oannes.transport.futrue.DefaultResponseFuture;
 import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
+import com.oannes.common.RpcRequest;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -21,10 +22,12 @@ public class NettyClient extends AbstractClient{
 	private volatile Channel channel;
 	private String key;
 	private EventLoopGroup group;
+	private ExchangeClient client;
 
-	public NettyClient(String host, int port) {
+	public NettyClient(String host, int port,ExchangeClient client) {
 		super(host, port);
 	    key=host+":"+port;
+	    this.client=client;
 	}
 
 
@@ -80,7 +83,7 @@ public class NettyClient extends AbstractClient{
 				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 15))
 				.addLast( MarshallingCodeCFactory.buildMarshallingDecoder())
 				.addLast( MarshallingCodeCFactory.buildMarshallingEncoder())
-				.addLast(new ClientHandler())
+				.addLast(new ClientHandler(client))
 				;
 				
 			}
