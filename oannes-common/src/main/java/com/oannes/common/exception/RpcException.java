@@ -2,6 +2,10 @@ package com.oannes.common.exception;
 
 public class RpcException extends Exception {
 
+	public RpcException(String string) {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

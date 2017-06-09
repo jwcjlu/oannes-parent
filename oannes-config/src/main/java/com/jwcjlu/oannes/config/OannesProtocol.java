@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
+import com.jwcjlu.oannes.filter.InvokerWapper;
 import com.jwcjlu.oannes.register.Register;
 import com.jwcjlu.oannes.register.ZookeeperRegister;
 import com.jwcjlu.oannes.transport.RemoteException;
@@ -54,7 +55,7 @@ public class OannesProtocol {
 		});
 		
 		latch.await(3,TimeUnit.SECONDS);
-	    Invoker invoker=new OannesInvoker(url,client);
+	    Invoker invoker=new InvokerWapper().buildFilterChain(new OannesInvoker(url,client));
 	    return  invoker;
 	}
 	void openServer(final URL url){

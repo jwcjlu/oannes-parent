@@ -1,7 +1,11 @@
 package com.jwcjlu.oannes.filter;
 
-import com.jwcjlu.oannes.Invocation;
-import com.jwcjlu.oannes.Result;
+import com.oannes.common.Constants;
+import com.oannes.common.Invocation;
+import com.oannes.common.Invoker;
+import com.oannes.common.Result;
+import com.oannes.common.URL;
+import com.oannes.common.exception.RpcException;
 
 /**
  * <pre>
@@ -26,10 +30,25 @@ public class TpsLimitedFilter implements Filter{
 	 * @see com.jwcjlu.oannes.filter.Filter#invoke(com.jwcjlu.oannes.filter.Invoker, com.jwcjlu.oannes.Invocation)
 	 */
 	@Override
-	public Result invoke(Invoker invoker, Invocation invocation) {
+	public Result invoke(Invoker invoker, Invocation invocation) throws RpcException {
 		//limiter.isAllowing(serviceName, rate, interval)
 		// TODO Auto-generated method stub
-		return invoker.invoke(invocation);
+		URL url=invoker.getURL();
+		 int rate=url.getParameter("rate",Constants.RATE);
+		 int interval=url.getParameter("interval",Constants.INTERVAL);
+		 boolean flag=limiter.isAllowing(invocation.getInterface()+invocation.getMethod().getName(), rate, interval);
+		if(!flag){
+			System.out.println("tps is full");
+			throw new RpcException(
+                    new StringBuilder(64)
+                            .append("Failed to invoke service ")
+                            .append(invocation.getInterface().getName())
+                            .append(".")
+                            .append(invocation.getMethod())
+                            .append(" because exceed max service tps.")
+                            .toString());
+		}
+		 return invoker.invoke(invocation);
 		
 	}
 

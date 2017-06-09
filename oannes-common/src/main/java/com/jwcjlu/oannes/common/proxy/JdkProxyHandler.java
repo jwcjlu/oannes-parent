@@ -23,7 +23,7 @@ public class JdkProxyHandler<T> implements InvocationHandler, com.jwcjlu.oannes.
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Invocation  invocation =new RpcInvocation(method,args,type);
 		Invoker<T> invoker=loadBalance.select(invokers, url, invocation);
-		return invoker.invoke(invocation);
+		return invoker.invoke(invocation).getObj();
 
 	}
 

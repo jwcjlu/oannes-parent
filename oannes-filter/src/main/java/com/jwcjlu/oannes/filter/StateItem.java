@@ -1,5 +1,6 @@
 package com.jwcjlu.oannes.filter;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -51,7 +52,7 @@ public class StateItem {
 		int value=token.get();
 		boolean flag=false;
 		while(value>0&&!flag){
-			flag=token.compareAndSet(value-1, value);
+			flag=token.compareAndSet(value, value-1);
 			value=token.get();
 		}
 		return flag;
@@ -61,6 +62,12 @@ public class StateItem {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public static void main(String[] args) throws InterruptedException {
+		long last=System.currentTimeMillis();
+		TimeUnit.SECONDS.sleep(2);
+		long now=System.currentTimeMillis();
+		System.out.println(now-last);
 	}
 
 }

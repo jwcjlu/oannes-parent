@@ -2,11 +2,10 @@ package com.oannes.common;
 
 public final class Constants {
 
-
 	public static final String ROOT = "oannes";
-	
+
 	public static final String PATH_SEPARATOR = "/";
-	
+
 	public static final String INTERFACE_KEY = "interface";
 
 	public static final String CONSUMER = "consumer";
@@ -54,5 +53,9 @@ public final class Constants {
 	public static final String PROXY = "proxy";
 
 	public static final String DEFAULT_PROXY = "default";
+	
+	public static final int RATE = 50;
+	
+	public static final int INTERVAL = 60000;
 
 }

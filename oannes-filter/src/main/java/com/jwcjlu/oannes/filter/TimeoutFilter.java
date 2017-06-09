@@ -1,7 +1,9 @@
 package com.jwcjlu.oannes.filter;
 
-import com.jwcjlu.oannes.Invocation;
-import com.jwcjlu.oannes.Result;
+import com.oannes.common.Invocation;
+import com.oannes.common.Invoker;
+import com.oannes.common.Result;
+import com.oannes.common.exception.RpcException;
 
 /**
  * <pre>
@@ -25,7 +27,7 @@ public class TimeoutFilter implements Filter {
 	 * @see com.jwcjlu.oannes.filter.Filter#invoke(com.jwcjlu.oannes.filter.Invoker, com.jwcjlu.oannes.Invocation)
 	 */
 	@Override
-	public Result invoke(Invoker invoker, Invocation invocation) {
+	public Result invoke(Invoker invoker, Invocation invocation) throws RpcException {
 		// TODO Auto-generated method stub
         return invoker.invoke(invocation);
 	}

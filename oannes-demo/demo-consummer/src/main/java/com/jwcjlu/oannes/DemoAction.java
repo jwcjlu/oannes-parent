@@ -24,7 +24,7 @@ public class DemoAction {
                 e.printStackTrace();
             }
             int time=new Random().nextInt(4)+2;
-           TimeUnit.SECONDS.sleep(time);
+           TimeUnit.SECONDS.sleep(1);
         }
 	}
 	public DemoService getDemoService() {

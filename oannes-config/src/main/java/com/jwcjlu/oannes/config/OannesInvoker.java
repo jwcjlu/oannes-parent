@@ -7,6 +7,7 @@ import com.jwcjlu.oannes.transport.RemoteException;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.oannes.common.Invocation;
 import com.oannes.common.Invoker;
+import com.oannes.common.Result;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.URL;
 
@@ -19,7 +20,7 @@ public class OannesInvoker implements Invoker{
 	}
 
 	@Override
-	public Object invoke(Invocation invocation) {
+	public Result invoke(Invocation invocation) {
 		// TODO Auto-generated method stub
 		RpcRequest request=new RpcRequest();
 		request.setArgs(invocation.getAgrs());
@@ -27,13 +28,18 @@ public class OannesInvoker implements Invoker{
 		request.setMethod(invocation.getMethod().getName());
 		request.setType(invocation.getInterface());
 		Object obj=null;
+		Result result=new Result();
 		try{
           obj=client.request(invocation);
+		  result.setSuccessful(true);
+		  result.setObj(obj);
 		}catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			result.setException(e);
+			result.setSuccessful(false);
 		}
-		return obj;
+		return result;
 	}
 
 	@Override

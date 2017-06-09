@@ -1,11 +1,16 @@
 package com.jwcjlu.oannes.filter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.util.CollectionUtils;
 
-import com.jwcjlu.oannes.Invocation;
-import com.jwcjlu.oannes.Result;
+import com.oannes.common.Invocation;
+import com.oannes.common.Invoker;
+import com.oannes.common.Result;
+import com.oannes.common.URL;
+import com.oannes.common.exception.RpcException;
 
 /**
  * <pre>
@@ -24,22 +29,25 @@ import com.jwcjlu.oannes.Result;
  * </pre>
  */
 public class InvokerWapper {
-	public Invoker buildFilterChain(Invoker invoker,Invocation invocation){
+	@SuppressWarnings("rawtypes")
+	public Invoker buildFilterChain(Invoker invoker){
 		Invoker last=invoker;
 		List<Filter> filters=getFilters();
-		if(!CollectionUtils.isEmpty(filters)){
+		if(CollectionUtils.isEmpty(filters)){
 			return last;
 		}
 		for(Filter f:filters){
 			final Filter fi=f;
 			final Invoker next=last;
 			last=new Invoker() {
-				
 				@Override
-				public Result invoke(Invocation invocation) {
+				public Result invoke(Invocation invocation) throws RpcException {
 					// TODO Auto-generated method stub
 					return fi.invoke(next, invocation);
 					
+				}
+				public URL getURL(){
+					return next.getURL();
 				}
 			}; 
 		}
@@ -47,7 +55,9 @@ public class InvokerWapper {
 		
 	}
 	public List<Filter> getFilters(){
-		return null;
+		List<Filter> filters=new ArrayList<Filter>();
+		filters.add(new TpsLimitedFilter());
+		return filters;
 	}
 
 }

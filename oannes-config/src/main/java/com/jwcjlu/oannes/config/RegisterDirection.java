@@ -39,6 +39,7 @@ public class RegisterDirection<T> implements NotifyListener{
 		this.proxyHandler = proxyHandler;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	void refrashInvoker(List<URL> urls){
 		if(CollectionUtils.isEmpty(urls)){
 			return ;

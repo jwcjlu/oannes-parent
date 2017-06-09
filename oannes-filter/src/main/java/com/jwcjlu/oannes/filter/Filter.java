@@ -1,7 +1,9 @@
 package com.jwcjlu.oannes.filter;
 
-import com.jwcjlu.oannes.Invocation;
-import com.jwcjlu.oannes.Result;
+import com.oannes.common.Invocation;
+import com.oannes.common.Invoker;
+import com.oannes.common.Result;
+import com.oannes.common.exception.RpcException;
 
 /**
  * <pre>
@@ -26,8 +28,9 @@ public interface Filter {
 	 *
 	 * @param invoker
 	 * @param invocation
+	 * @throws RpcException 
 	 */
-	Result invoke(Invoker invoker,Invocation invocation);
+	Result invoke(Invoker invoker,Invocation invocation) throws RpcException;
 	
 }
 
