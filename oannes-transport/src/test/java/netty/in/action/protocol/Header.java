@@ -1,26 +1,18 @@
 package netty.in.action.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public final class Header {
-
-		private int crcCode=0xabef0101;
+		//版本
+		private int version=1;
 		//消息长度
 		private int length;
-		//回话Id
-		private long sessionID;
-		//信息类型
+		//小心类型
 		private byte type;
-		//信息优先级
-		private byte priority;
-		//附件
-		private Map<String,Object>attachment=new HashMap<String,Object>();
-		public int getCrcCode() {
-			return crcCode;
+		public int getVersion() {
+			return version;
 		}
-		public void setCrcCode(int crcCode) {
-			this.crcCode = crcCode;
+		public void setVersion(int version) {
+			this.version = version;
 		}
 		public int getLength() {
 			return length;
@@ -28,29 +20,33 @@ public final class Header {
 		public void setLength(int length) {
 			this.length = length;
 		}
-		public long getSessionID() {
-			return sessionID;
-		}
-		public void setSessionID(long sessionID) {
-			this.sessionID = sessionID;
-		}
 		public byte getType() {
 			return type;
 		}
 		public void setType(byte type) {
 			this.type = type;
 		}
-		public byte getPriority() {
-			return priority;
+		@Override
+		public String toString() {
+			return "Header [version=" + version + ", length=" + length
+					+ ", type=" + type + "]";
 		}
-		public void setPriority(byte priority) {
-			this.priority = priority;
+		/**
+		 * Header Constructor. 
+		 *
+		 * @param version
+		 * @param length
+		 * @param type
+		 */
+		public Header( byte type,int version, int length) {
+			super();
+			this.version = version;
+			this.length = length;
+			this.type = type;
 		}
-		public Map<String, Object> getAttachment() {
-			return attachment;
-		}
-		public void setAttachment(Map<String, Object> attachment) {
-			this.attachment = attachment;
-		}
+	
+	
+
+	
        
 }
