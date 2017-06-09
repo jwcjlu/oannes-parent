@@ -13,6 +13,8 @@
   	<module>oannes-transport</module>
   	<module>oannes-registry</module>
   	<module>oannes-demo</module>
+  	<module>oannes-filter</module>
+  	<module>oannes</module>
   </modules>
   <profiles>
 	  <profile>  

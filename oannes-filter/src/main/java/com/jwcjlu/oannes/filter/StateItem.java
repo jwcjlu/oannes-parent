@@ -1,0 +1,66 @@
+package com.jwcjlu.oannes.filter;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * <pre>
+ * 
+ *  File: StateItem.java
+ * 
+ *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ * 
+ *  Description:
+ *  TODO
+ * 
+ *  Revision History
+ *  Date,					Who,					What;
+ *  2017年6月9日				Jinwei				Initial.
+ *
+ * </pre>
+ */
+public class StateItem {
+	private String name;
+	private long lastResetTime;
+	private long interval;
+	private AtomicInteger token;
+	private int rate;
+
+	/**
+	 * StateItem Constructor.
+	 *
+	 * @param name
+	 * @param lastRestTime
+	 * @param interval
+	 * @param token
+	 * @param rate
+	 */
+	public StateItem(String name, long interval, int rate) {
+		super();
+		this.name = name;
+		this.interval = interval;
+		this.rate = rate;
+		this.lastResetTime = System.currentTimeMillis();
+	    this.token = new AtomicInteger(rate);
+	}
+	public boolean isAllowing(){
+		long now=System.currentTimeMillis();
+		if(now>lastResetTime+interval){
+			lastResetTime=now;
+			token.set(rate);
+		}
+		int value=token.get();
+		boolean flag=false;
+		while(value>0&&!flag){
+			flag=token.compareAndSet(value-1, value);
+			value=token.get();
+		}
+		return flag;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+}
