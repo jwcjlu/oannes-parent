@@ -29,6 +29,7 @@ public class TpsLimitedFilter implements Filter{
 	/* (non-Javadoc)
 	 * @see com.jwcjlu.oannes.filter.Filter#invoke(com.jwcjlu.oannes.filter.Invoker, com.jwcjlu.oannes.Invocation)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Result invoke(Invoker invoker, Invocation invocation) throws RpcException {
 		//limiter.isAllowing(serviceName, rate, interval)

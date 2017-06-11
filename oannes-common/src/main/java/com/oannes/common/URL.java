@@ -28,6 +28,7 @@ public  class URL {
 	private final String password;
 
     private final Map<String, String> parameters;
+    private String backupAddress;
 
 	public URL() {
         this.protocol = null;
@@ -55,7 +56,7 @@ public  class URL {
 
 	public String getBackupAddress() {
 		// TODO Auto-generated method stub
-		return parameters.get("backupAddress");
+		return backupAddress;
 	}
 	public String getAuthority() {
 		// TODO Auto-generated method stub
@@ -415,6 +416,10 @@ public  class URL {
 
 		public void setUrl(String url) {
 			this.url = url;
+		}
+
+		public void setBackupAddress(String backupAddress) {
+			this.backupAddress = backupAddress;
 		}
 
 		private volatile transient Map<String, Number> numbers;

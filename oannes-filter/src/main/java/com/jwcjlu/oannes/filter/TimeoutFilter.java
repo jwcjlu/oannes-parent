@@ -26,10 +26,15 @@ public class TimeoutFilter implements Filter {
 	/* (non-Javadoc)
 	 * @see com.jwcjlu.oannes.filter.Filter#invoke(com.jwcjlu.oannes.filter.Invoker, com.jwcjlu.oannes.Invocation)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Result invoke(Invoker invoker, Invocation invocation) throws RpcException {
 		// TODO Auto-generated method stub
-        return invoker.invoke(invocation);
+		long start=System.currentTimeMillis();
+         Result result=invoker.invoke(invocation);
+         long now=System.currentTimeMillis();
+         System.out.println("lost time is "+(now-start));
+         return result;
 	}
 
 }

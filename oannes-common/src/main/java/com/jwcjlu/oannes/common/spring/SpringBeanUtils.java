@@ -3,9 +3,23 @@ package com.jwcjlu.oannes.common.spring;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Service;
-
-@Service
+/**
+ * 
+ * <pre>
+ * spring Bean的工具类
+ *  File: SpringBeanUtils.java
+ * 
+ *  Copyright (c) 2017, com.jwcjlu All Rights Reserved.
+ * 
+ *  Description:
+ *  TODO
+ * 
+ *  Revision History
+ *  Date,					Who,					What;
+ *  2017年6月11日				jinwei				Initial.
+ *
+ * </pre>
+ */
 public class SpringBeanUtils implements ApplicationContextAware{
 	private static ApplicationContext context;
 

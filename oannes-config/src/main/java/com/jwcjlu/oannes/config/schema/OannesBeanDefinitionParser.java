@@ -13,8 +13,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.jwcjlu.oannes.config.spring.BeanScannerConfigurer;
-
 public class OannesBeanDefinitionParser implements BeanDefinitionParser {
     private final Class<?> beanClass;
     
@@ -32,6 +30,7 @@ public class OannesBeanDefinitionParser implements BeanDefinitionParser {
 		 return parse(element, parserContext, beanClass, required);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private BeanDefinition parse(Element element, ParserContext parserContext, Class<?> beanClass, boolean required) {
 		// TODO Auto-generated method stub
 		 RootBeanDefinition beanDefinition = new RootBeanDefinition();

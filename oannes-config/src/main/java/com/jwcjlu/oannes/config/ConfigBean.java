@@ -21,7 +21,6 @@ public abstract class ConfigBean  implements Serializable{
 	/**
 	 * 
 	 */
-	protected static Collection<String> services= Collections.synchronizedCollection(new HashSet<String>());
 	protected static ReentrantLock  lock=new ReentrantLock();
 	private static final long serialVersionUID = 1L;
 	protected String id;
@@ -63,26 +62,26 @@ public abstract class ConfigBean  implements Serializable{
 	public void setPort(int port) {
 		this.port = port;
 	}
-	public void setter(OannService service){
-		parameter.put("backupAddress", service.backupAddress());
+	public void setter(OannService service,RegisterBean register){
 		parameter.put("group", service.group());
 		parameter.put("interface", service.interfaces().getName());
 		parameter.put("version", service.version());
-		parameter.put("port", service.port());
-		port=service.port();
+		parameter.put("port", register.get("port"));
+		port=Integer.parseInt(register.get("port").toString());;
 		host=NetUtil.getRemoteAddress().getHostAddress();
 		parameter.put("host",host );
 		path=service.interfaces().getName();
+	
 	}
-	public void setter(OannConsumer consumer){
-		parameter.put("backupAddress", consumer.backupAddress());
+	public void setter(OannConsumer consumer,RegisterBean register){
 		parameter.put("group", consumer.group());
 		path=consumer.interfaces().getName();
 		parameter.put("interface", consumer.interfaces().getName());
 		parameter.put("version", consumer.version());
-		parameter.put("port", consumer.port());
+		parameter.put("port",register.get("port"));
 		parameter.put("host", consumer.host());
-		port=consumer.port();
+		port=Integer.parseInt(register.get("port").toString());
+		
 			
 	}
    @SuppressWarnings("rawtypes")
@@ -121,6 +120,7 @@ public  URL builderURL(){
    public void setAttribute(String key,Object obj){
 	   parameter.put(key, obj);
    }
+   
  
 
 }

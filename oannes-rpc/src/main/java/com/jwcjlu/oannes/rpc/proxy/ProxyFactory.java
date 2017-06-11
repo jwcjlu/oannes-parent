@@ -1,10 +1,11 @@
-package com.jwcjlu.oannes.common.proxy;
+package com.jwcjlu.oannes.rpc.proxy;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.jwcjlu.oannes.rpc.proxy.Proxy;
 import com.oannes.common.Constants;
 import com.oannes.common.URL;
 

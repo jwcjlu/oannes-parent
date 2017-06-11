@@ -4,13 +4,12 @@ import org.springframework.beans.factory.support.ManagedMap;
 
 public class RegisterBean {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4951033760390728834L;
+
 	private String  id;
+	@SuppressWarnings("rawtypes")
 	private  ManagedMap parameters;
 	private int port;
+	@SuppressWarnings("rawtypes")
 	public ManagedMap getParameters() {
 		return parameters;
 	}

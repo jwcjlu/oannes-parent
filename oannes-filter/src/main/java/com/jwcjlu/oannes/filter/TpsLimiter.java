@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TpsLimiter {
 	
-	private ConcurrentMap<String,StateItem> map=new ConcurrentHashMap<String,StateItem>();
+	private ConcurrentMap<String,StatItem> map=new ConcurrentHashMap<String,StatItem>();
 	/**
 	 * 是否超过流量了
 	 * TODO.
@@ -33,9 +33,9 @@ public class TpsLimiter {
 	 */
 	public boolean isAllowing(String serviceName,int rate, long interval){
 		if(rate>0){
-	        StateItem item=	map.get(serviceName);
+	        StatItem item=	map.get(serviceName);
 	        if(item==null){
-	        item=new StateItem(serviceName, interval, rate);
+	        item=new StatItem(serviceName, interval, rate);
 	        map.put(serviceName, item);
 	        }
 	        return item.isAllowing();
