@@ -28,7 +28,7 @@ public class StatItem {
 	private int rate;
 
 	/**
-	 * StateItem Constructor.
+	 * StatItem Constructor.
 	 *
 	 * @param name
 	 * @param lastRestTime
