@@ -1,8 +1,9 @@
 package com.jwcjlu.oannes.filter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import org.springframework.util.CollectionUtils;
 
@@ -56,7 +57,12 @@ public class InvokerWapper {
 	}
 	public List<Filter> getFilters(){
 		List<Filter> filters=new ArrayList<Filter>();
-		filters.add(new TpsLimitedFilter());
+		 ServiceLoader<Filter> sload = ServiceLoader.load(Filter.class);  
+	     Iterator<Filter> fs = sload.iterator();  
+	     while(fs.hasNext()){
+	    	 filters.add(fs.next());
+	     }
+	      
 		return filters;
 	}
 

@@ -7,14 +7,14 @@
  
   <modules>
   	<module>oannes-common</module>
-  	<module>oannes-container</module>
   	<module>oannes-config</module>
-  	<module>oannes-rpc</module>
   	<module>oannes-transport</module>
   	<module>oannes-registry</module>
   	<module>oannes-demo</module>
   	<module>oannes-filter</module>
   	<module>oannes</module>
+  	<module>oannes-rpc</module>
+  	<module>oannes-cluster</module>
   </modules>
   <profiles>
 	  <profile>  

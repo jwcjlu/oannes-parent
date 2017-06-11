@@ -77,7 +77,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 			 ServiceBean<Object> serv=new ServiceBean<Object>(applicationContext);
 			 serv.setInterfaces(type);
 			 serv.setPort(oService.port());
-			 serv.setter(oService);
+			 serv.setter(oService,SpringBeanUtils.getBean(RegisterBean.class));
 			 
 			 try {
 				serv.afterPropertiesSet();
@@ -174,7 +174,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
  
     	consumer.setPort(reference.port());
     	consumer.setInterfaces(reference.interfaces());
-    	consumer.setter(reference);
+    	consumer.setter(reference,SpringBeanUtils.getBean(RegisterBean.class));
     	//consumer.afterPropertiesSet();
 		return consumer.getObject();
 	}

@@ -5,5 +5,12 @@
     <artifactId>oannes-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>oannes-container</artifactId>
+  <artifactId>oannes-cluster</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.oannes</groupId>
+  		<artifactId>oannes-common</artifactId>
+  		<version>1.0.0-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

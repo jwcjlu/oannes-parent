@@ -1,8 +1,8 @@
-package com.jwcjlu.oannes.config;
+package com.jwcjlu.oannes.rpc.invoke;
 
 import java.util.UUID;
 
-import com.jwcjlu.oannes.common.proxy.JdkProxyHandler;
+import com.jwcjlu.oannes.rpc.proxy.JdkProxyHandler;
 import com.jwcjlu.oannes.transport.RemoteException;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.oannes.common.Invocation;
@@ -11,6 +11,23 @@ import com.oannes.common.Result;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.URL;
 
+/**
+ * <pre>
+ * 
+ *  File: OannesInvoker.java
+ * 
+ *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ * 
+ *  Description:
+ *  TODO
+ * 
+ *  Revision History
+ *  Date,					Who,					What;
+ *  2017年6月11日				jinwei				Initial.
+ *
+ * </pre>
+ */
+@SuppressWarnings("rawtypes")
 public class OannesInvoker implements Invoker{
 	private URL url;
 	private ExchangeClient client;
@@ -56,3 +73,4 @@ public class OannesInvoker implements Invoker{
 		return this.getURL().equals(((Invoker)obj).getURL());
 	}
 }
+

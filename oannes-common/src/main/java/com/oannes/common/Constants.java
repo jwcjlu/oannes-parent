@@ -57,5 +57,7 @@ public final class Constants {
 	public static final int RATE = 50;
 	
 	public static final int INTERVAL = 60000;
+	
+	public static final int RETRY=3;
 
 }

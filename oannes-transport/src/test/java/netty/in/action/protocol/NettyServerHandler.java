@@ -3,11 +3,6 @@ package netty.in.action.protocol;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.lang.reflect.Method;
-
-import com.jwcjlu.oannes.common.RpcRequest;
-import com.jwcjlu.oannes.common.RpcResponse;
-
 /**
  * <pre>
  * 

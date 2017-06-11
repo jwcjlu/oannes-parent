@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <pre>
+ * 统计项
  * 
  *  File: StateItem.java
  * 
@@ -19,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * </pre>
  */
-public class StateItem {
+public class StatItem {
 	private String name;
 	private long lastResetTime;
 	private long interval;
@@ -35,7 +36,7 @@ public class StateItem {
 	 * @param token
 	 * @param rate
 	 */
-	public StateItem(String name, long interval, int rate) {
+	public StatItem(String name, long interval, int rate) {
 		super();
 		this.name = name;
 		this.interval = interval;

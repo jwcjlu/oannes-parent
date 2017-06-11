@@ -25,7 +25,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse>{
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("回调没有呢！！");
 		 if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {  
 	            IdleStateEvent event = (IdleStateEvent) evt;  
 	         
