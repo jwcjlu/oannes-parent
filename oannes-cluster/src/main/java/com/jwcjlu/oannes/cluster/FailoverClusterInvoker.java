@@ -20,7 +20,7 @@ import com.oannes.common.exception.RpcException;
  *调用失败可以重试相应的次数
  *  File: FailoverCluster.java
  * 
- *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ *  Copyright (c) 2017,jwcjlu.com All Rights Reserved.
  * 
  *  Description:
  *  TODO

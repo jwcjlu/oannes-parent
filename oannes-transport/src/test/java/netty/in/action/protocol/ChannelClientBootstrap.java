@@ -22,7 +22,7 @@ import io.netty.handler.timeout.IdleStateHandler;
  * 
  *  File: ChannelClientBootstrap.java
  * 
- *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ *  Copyright (c) 2017,jwcjlu.com All Rights Reserved.
  * 
  *  Description:
  *  TODO

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentMap;
  * 
  *  File: TpsLimiter.java
  * 
- *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ *  Copyright (c) 2017,jwcjlu.com All Rights Reserved.
  * 
  *  Description:
  *  TODO

@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  *  File: StateItem.java
  * 
- *  Copyright (c) 2017, globalegrow.com All Rights Reserved.
+ *  Copyright (c) 2017,jwcjlu.com All Rights Reserved.
  * 
  *  Description:
  *  TODO
