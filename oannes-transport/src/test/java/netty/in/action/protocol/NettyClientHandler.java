@@ -5,8 +5,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
-import com.jwcjlu.oannes.transport.Hander;
-
 /**
  * <pre>
  * 

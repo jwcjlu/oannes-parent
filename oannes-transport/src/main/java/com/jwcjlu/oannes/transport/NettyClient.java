@@ -80,12 +80,11 @@ public class NettyClient extends AbstractClient{
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
 				ch.pipeline()
+				.addLast( new OannesEncoder())
+				.addLast( new OannesClientDecoder(8192, 14, 4))
 				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 15))
-				.addLast( MarshallingCodeCFactory.buildMarshallingDecoder())
-				.addLast( MarshallingCodeCFactory.buildMarshallingEncoder())
-				.addLast(new ClientHandler(client))
-				;
-				
+				.addLast(new HeartbeatHander())
+				.addLast(new ClientHandler(client));
 			}
 		});
 		
@@ -95,7 +94,14 @@ public class NettyClient extends AbstractClient{
 	@Override
 	public void send(Object msg) {
 		// TODO Auto-generated method stub
-		channel.writeAndFlush(msg);
+	    OannesMessage omsg=new OannesMessage();
+	    Header header=new Header();
+	    header.setType(MsgType.RPC_REQ.getValue());
+	    omsg.setHeader(header);
+	    omsg.setBody(msg);
+	    System.out.println(omsg);
+	    System.out.println(channel==null||!channel.isActive());
+		channel.writeAndFlush(omsg);
 	}
 
 

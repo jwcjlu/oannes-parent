@@ -1,14 +1,17 @@
 package com.jwcjlu.oannes.transport.exchange;
 
+import io.netty.channel.Channel;
+
 import java.lang.reflect.Method;
 
 import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
+import com.jwcjlu.oannes.transport.Header;
+import com.jwcjlu.oannes.transport.MsgType;
 import com.jwcjlu.oannes.transport.NettyServer;
+import com.jwcjlu.oannes.transport.OannesMessage;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.RpcResponse;
 import com.oannes.common.URL;
-
-import io.netty.channel.Channel;
 
 public class ExchangeServerImpl implements ExchangeServer {
 
@@ -24,6 +27,7 @@ public class ExchangeServerImpl implements ExchangeServer {
 		 Object obj=SpringBeanUtils.getBean(request.getType());
 		 Method method;
 		 RpcResponse res=new RpcResponse();
+		 OannesMessage  msg=new OannesMessage();
 		try {
 			method = obj.getClass().getDeclaredMethod(request.getMethod(), request.getParameterTypes());
 			 Object result=method.invoke(obj, request.getArgs());
@@ -36,7 +40,11 @@ public class ExchangeServerImpl implements ExchangeServer {
 			res.setResult(e);
 		
 		}
-		 channel.writeAndFlush(res);
+		Header header =new Header();
+		header.setType(MsgType.RPC_RESP.getValue());
+		msg.setHeader(header);
+		msg.setBody(res);;
+	    channel.writeAndFlush(msg);
 	}
 
 }

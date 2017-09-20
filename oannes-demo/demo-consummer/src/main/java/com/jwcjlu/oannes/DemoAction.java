@@ -19,13 +19,13 @@ public class DemoAction {
         for (int i = 0; i < Integer.MAX_VALUE; i ++) {
             try {
             	String hello = demoService.sayHello("world" + i);
-            	service.sayHello();
+            	/*service.sayHello();*/
                 System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + hello);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int time=new Random().nextInt(4)+2;
-           TimeUnit.SECONDS.sleep(1);
+            int time=new Random().nextInt(11)+5;
+           TimeUnit.SECONDS.sleep(time);
         }
 	}
 	public DemoService getDemoService() {

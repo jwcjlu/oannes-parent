@@ -18,7 +18,7 @@ import java.io.Serializable;
  *
  * </pre>
  */
-public class Hander implements Serializable{
+public class Header implements Serializable{
 
 	/**
 	 * Comment for &lt;code&gt;serialVersionUID&lt;/code&gt;
@@ -27,15 +27,33 @@ public class Hander implements Serializable{
 	private byte type;
 	private int version;
 	private int length;
+	private byte priority;
+	private long sessionID;
 	
-	/**
+	
+	public Header()
+    {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+    public Header(byte type, int version, int length, byte priority, long sessionID)
+    {
+        super();
+        this.type = type;
+        this.version = version;
+        this.length = length;
+        this.priority = priority;
+        this.sessionID = sessionID;
+    }
+    /**
+	 * 
 	 * Hander Constructor. 
 	 *
 	 * @param type
 	 * @param version
 	 * @param length
 	 */
-	public Hander(byte type, int version, int length) {
+	public Header(byte type, int version, int length) {
 		super();
 		this.type = type;
 		this.version = version;
@@ -59,5 +77,22 @@ public class Hander implements Serializable{
 	public void setLength(int length) {
 		this.length = length;
 	}
+    public byte getPriority()
+    {
+        return priority;
+    }
+    public void setPriority(byte priority)
+    {
+        this.priority = priority;
+    }
+    public long getSessionID()
+    {
+        return sessionID;
+    }
+    public void setSessionID(long sessionID)
+    {
+        this.sessionID = sessionID;
+    }
+	
 }
 

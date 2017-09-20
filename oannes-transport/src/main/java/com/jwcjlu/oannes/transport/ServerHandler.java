@@ -19,6 +19,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest>{
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, RpcRequest msg) throws Exception {
 		// TODO Auto-generated method stub
+	    if(msg==null){
+	        return;
+	    }
 		
 		 server.reply(ctx.channel(), msg);
 		

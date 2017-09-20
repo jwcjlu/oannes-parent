@@ -22,16 +22,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse>{
 		
 	}
 
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		// TODO Auto-generated method stub
-		 if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {  
-	            IdleStateEvent event = (IdleStateEvent) evt;  
-	         
-	        } 
-	}
+	
 
-	@Override
+    @Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		// TODO Auto-generated method stub
 		super.channelActive(ctx);

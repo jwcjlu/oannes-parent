@@ -10,7 +10,7 @@ import com.oannes.common.RpcRequest;
 import com.oannes.common.RpcResponse;
 
 public class DefaultResponseFuture implements ResponseFuture{
-	private final static long defaultTimeOut=1000;
+	private final static long defaultTimeOut=10000;
 	private final static ConcurrentHashMap<String,ResponseFuture>responseFutures=new ConcurrentHashMap<String,ResponseFuture>();
 	private ReentrantLock  lock=new ReentrantLock();
 	private Condition done=lock.newCondition();

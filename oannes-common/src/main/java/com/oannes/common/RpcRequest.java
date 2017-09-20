@@ -2,7 +2,7 @@ package com.oannes.common;
 
 import java.io.Serializable;
 
-public class RpcRequest implements Serializable{
+public class RpcRequest implements Request, Serializable{
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private Class<?> type;

@@ -38,8 +38,8 @@ public class NettyServer extends AbstractServer{
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
 				ch.pipeline()
-				.addLast( MarshallingCodeCFactory.buildMarshallingDecoder())
-				.addLast( MarshallingCodeCFactory.buildMarshallingEncoder())
+				.addLast( new OannesEncoder())
+                .addLast( new OannesServerDecoder(8192, 14, 4))
 				.addLast(new ServerHandler(server))
 				;
 				
