@@ -11,5 +11,5 @@
    http://code.jwcjlu.com/schema/oannes  http://code.jwcjlu.com/schema/oannes/oannes.xsd">
    <oannes:annotation basePackage="com.jwcjlu"/>  
   <context:annotation-config />  
-   <oannes:register register="192.168.1.104:2181" port="8808"/>
+   <oannes:register register="localhost:2181" port="8809"/>
 </beans> 
