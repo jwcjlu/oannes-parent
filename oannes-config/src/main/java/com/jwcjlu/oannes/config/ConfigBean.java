@@ -1,13 +1,11 @@
 package com.jwcjlu.oannes.config;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.oannes.common.Constants;
@@ -21,6 +19,7 @@ public abstract class ConfigBean  implements Serializable{
 	/**
 	 * 
 	 */
+    private static List<String> filterKeys=new ArrayList<String>();
 	protected static ReentrantLock  lock=new ReentrantLock();
 	private static final long serialVersionUID = 1L;
 	protected String id;
@@ -29,6 +28,12 @@ public abstract class ConfigBean  implements Serializable{
 	protected String host;
 	protected int port;
 	protected String path;
+	static{
+	    
+	    filterKeys.add("interface");
+	    filterKeys.add("host");
+	    filterKeys.add("port");
+	}
 
 	protected Map<String,Object> parameter=new HashMap<String,Object>();
 
@@ -95,21 +100,17 @@ public  URL builderURL(){
 		 Map.Entry ent=(Map.Entry )iter.next();  
        String key=ent.getKey().toString();  
 		   Object obj=ent.getValue();
-		   if(obj!=null){
+		   if(obj!=null&&!filterParam(key)){
 			   if(obj instanceof String){
 				   if(StringUtils.isNotEmpty(obj.toString())){
 					   if (isFirst) {
 						sb.append("?").append(key).append("=").append(obj);
 						isFirst=false;
-					}
+					}else{
+		                   sb.append("&").append(key).append("=").append(obj);  
+		               }
 				   }
-			   }else{
-			   if(isFirst){
-				   sb.append("?").append(key).append("=").append(obj);
-					isFirst=false;
-			   }else{
-				   sb.append("&").append(key).append("=").append(obj);  
-			   }
+			 
 			   }
 		   }
 	   }
@@ -117,7 +118,12 @@ public  URL builderURL(){
 	
 	  return url;
    }
-   public void setAttribute(String key,Object obj){
+   private boolean filterParam(String key)
+{
+    // TODO Auto-generated meth
+    return filterKeys.contains(key);
+}
+public void setAttribute(String key,Object obj){
 	   parameter.put(key, obj);
    }
    

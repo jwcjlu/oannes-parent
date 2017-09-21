@@ -82,7 +82,7 @@ public class NettyClient extends AbstractClient{
 				ch.pipeline()
 				.addLast( new OannesEncoder())
 				.addLast( new OannesClientDecoder(8192, 14, 4))
-				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 15))
+				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 90))
 				.addLast(new HeartbeatHander())
 				.addLast(new ClientHandler(client));
 			}
@@ -99,8 +99,6 @@ public class NettyClient extends AbstractClient{
 	    header.setType(MsgType.RPC_REQ.getValue());
 	    omsg.setHeader(header);
 	    omsg.setBody(msg);
-	    System.out.println(omsg);
-	    System.out.println(channel==null||!channel.isActive());
 		channel.writeAndFlush(omsg);
 	}
 

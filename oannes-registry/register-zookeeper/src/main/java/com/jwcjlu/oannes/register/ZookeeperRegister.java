@@ -3,6 +3,7 @@ package com.jwcjlu.oannes.register;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -136,9 +137,9 @@ public class ZookeeperRegister extends FailbackRegistry {
 					zkListener = listeners.get(listener);
 				}
 				//client.createEphrmeralNode(toConsummerPath(url), "");
-				List<String> children = client.addChildListener(path, zkListener);
-				if (children != null) {
-					urls.addAll(toUrlsWithEmpty(url, path, children));
+				List<String> childrens = client.addChildListener(path, zkListener);
+				if (childrens != null) {
+					urls.addAll(toUrlsWithEmpty(url, path, childrens));
 				}
 			
 			notify(url, listener, urls);
@@ -161,8 +162,19 @@ public class ZookeeperRegister extends FailbackRegistry {
 		// TODO Auto-generated method stub
 		List<URL> urls=new ArrayList<URL>();
 		for(String value:children){
-			URL u=URL.valueOf(URL.decode(value));
-			urls.add(u);
+			URL u=URL.valueOf(URL.decode(value)); 
+			boolean added=true;
+			for(Entry<String,String> entry:u.getParameters().entrySet()){
+			    if(url.getParameter(entry.getKey())!=null&&!url.getParameter(entry.getKey()).equals(entry.getValue())){
+			        added=false;
+			        break;
+			    }
+			    
+			}
+			if(added){			    
+			    urls.add(u);
+			}
+			
 		}
 		return urls;
 	}

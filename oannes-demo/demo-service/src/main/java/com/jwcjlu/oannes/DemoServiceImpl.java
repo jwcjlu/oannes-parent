@@ -8,7 +8,7 @@ import com.jwcjlu.oannes.config.OannService;
 import com.jwcjlu.oannes.config.RegisterBean;
 import com.oannes.common.NetUtil;
 
-@OannService(interfaces=DemoService.class)
+@OannService(interfaces=DemoService.class,group="jwcjlu",version="2.0")
 public class DemoServiceImpl implements DemoService {
 	@Override
 	public String sayHello(String msg) {

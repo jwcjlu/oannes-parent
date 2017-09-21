@@ -1,5 +1,7 @@
 package com.jwcjlu.oannes.transport;
 
+import java.nio.charset.Charset;
+
 import com.oannes.common.RpcRequest;
 
 import io.netty.buffer.ByteBuf;
@@ -35,6 +37,12 @@ public class OannesServerDecoder extends LengthFieldBasedFrameDecoder
     protected RpcRequest decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception
     {
         // TODO Auto-generated method stub
+        /*if(in!=null&&in.readableBytes()<18){*/
+        /*    String msg=in.toString(Charset.defaultCharset());
+            System.out.println(msg);*/
+      
+            //ctx.channel().writeAndFlush(msg);
+     /*   }*/
         in = (ByteBuf) super.decode(ctx, in);
         if (in == null) {
             return null;

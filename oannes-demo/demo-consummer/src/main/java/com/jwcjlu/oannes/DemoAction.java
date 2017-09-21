@@ -11,9 +11,9 @@ import com.jwcjlu.oannes.config.OannConsumer;
 
 @Service
 public class DemoAction {
-	@OannConsumer(interfaces=DemoService.class)
+	@OannConsumer(interfaces=DemoService.class,group="jwcjlu",version="2.0")
 	private DemoService demoService;
-	@OannConsumer(interfaces=HelloService.class)
+	@OannConsumer(interfaces=HelloService.class,group="jwcjlu",version="1.0")
 	private HelloService  service;
 	public void start() throws Exception {
         for (int i = 0; i < Integer.MAX_VALUE; i ++) {
@@ -24,7 +24,7 @@ public class DemoAction {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int time=new Random().nextInt(11)+5;
+            int time=new Random().nextInt(60)+5;
            TimeUnit.SECONDS.sleep(time);
         }
 	}
