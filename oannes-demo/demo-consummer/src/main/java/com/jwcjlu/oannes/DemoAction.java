@@ -24,7 +24,7 @@ public class DemoAction {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int time=new Random().nextInt(60)+5;
+            int time=new Random().nextInt(10);
            TimeUnit.SECONDS.sleep(time);
         }
 	}

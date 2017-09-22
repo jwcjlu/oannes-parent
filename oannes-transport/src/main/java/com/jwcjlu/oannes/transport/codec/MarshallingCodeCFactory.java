@@ -1,4 +1,4 @@
-package com.jwcjlu.oannes.transport;
+package com.jwcjlu.oannes.transport.codec;
 
 import org.jboss.marshalling.MarshallerFactory;
 import org.jboss.marshalling.Marshalling;

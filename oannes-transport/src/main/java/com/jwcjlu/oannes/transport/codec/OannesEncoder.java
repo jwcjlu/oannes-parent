@@ -1,8 +1,12 @@
-package com.jwcjlu.oannes.transport;
+package com.jwcjlu.oannes.transport.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+
+import com.jwcjlu.oannes.transport.OannesMessage;
+import com.jwcjlu.oannes.transport.OannesMessageException;
+import com.jwcjlu.oannes.transport.SerializeUtil;
 
 /**
  * <pre>

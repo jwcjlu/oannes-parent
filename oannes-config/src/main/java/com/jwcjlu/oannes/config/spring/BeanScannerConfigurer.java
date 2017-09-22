@@ -128,7 +128,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 		                }
 	            	}
 	            } catch (Throwable e) {
-	            	System.out.println("Failed to init remote service reference at filed " + field.getName() + " in class " + bean.getClass().getName() + ", cause: " + e.getMessage());
+	                logger.error("Failed to init remote service reference at filed " + field.getName() + " in class " + bean.getClass().getName() + ", cause: " + e.getMessage());
 	            }
 	        }
 	        return bean;

@@ -1,12 +1,12 @@
-package com.jwcjlu.oannes.transport;
-
-import java.nio.charset.Charset;
-
-import com.oannes.common.RpcRequest;
+package com.jwcjlu.oannes.transport.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+
+import com.jwcjlu.oannes.transport.MsgType;
+import com.jwcjlu.oannes.transport.SerializeUtil;
+import com.oannes.common.RpcRequest;
 
 /**
  * <pre>
