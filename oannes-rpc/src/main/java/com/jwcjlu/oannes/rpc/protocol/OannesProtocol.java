@@ -1,12 +1,5 @@
 package com.jwcjlu.oannes.rpc.protocol;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.stereotype.Service;
-
 import com.jwcjlu.oannes.filter.InvokerWapper;
 import com.jwcjlu.oannes.register.Register;
 import com.jwcjlu.oannes.register.ZookeeperRegister;
@@ -15,10 +8,15 @@ import com.jwcjlu.oannes.transport.RemoteException;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClientImpl;
 import com.jwcjlu.oannes.transport.exchange.ExchangeServerImpl;
+import com.oannes.common.AbstractProtocol;
 import com.oannes.common.Invoker;
-import com.oannes.common.Protocol;
 import com.oannes.common.URL;
 import com.oannes.common.threadpool.NamedThreadFactory;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <pre>
@@ -36,15 +34,7 @@ import com.oannes.common.threadpool.NamedThreadFactory;
  *
  * </pre>
  */
-public class OannesProtocol implements Protocol{
-	private static OannesProtocol protocol;
-	private OannesProtocol(){}
-	public static OannesProtocol getInstance(){
-		if(protocol==null) {
-			protocol = new OannesProtocol();
-		}
-		return protocol;
-	}
+public class OannesProtocol extends AbstractProtocol {
 
 	private volatile  boolean isServer=false;
 	private static final ExecutorService  service=Executors.newCachedThreadPool(new NamedThreadFactory("oannesProtocol", true));
@@ -97,5 +87,9 @@ public class OannesProtocol implements Protocol{
 		
 	}
 
+	@Override
+	public String getName() {
+		return "default";
+	}
 }
 

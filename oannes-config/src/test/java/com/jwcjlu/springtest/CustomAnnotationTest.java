@@ -41,11 +41,7 @@ public class CustomAnnotationTest {
 
     @Test
     public void test() throws IOException {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConsumerConfiguration.class);
-        context.start();
-        HelloController helloWorld = (HelloController) context.getBean("helloController");
-        String msg = helloWorld.say("hello");
-        System.out.println(msg);
+
         System.in.read();
     }
 

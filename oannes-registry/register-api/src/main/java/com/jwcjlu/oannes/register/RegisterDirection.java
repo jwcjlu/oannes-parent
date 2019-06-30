@@ -5,16 +5,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.jwcjlu.oannes.common.services.BootServiceManager;
+import com.oannes.common.*;
 import org.springframework.util.CollectionUtils;
 
 import com.jwcjlu.oannes.cluster.ClusterFactory;
 import com.jwcjlu.oannes.cluster.loadBalance.LoadBalanceFactory;
-import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import com.jwcjlu.oannes.register.listener.NotifyListener;
-import com.oannes.common.Invocation;
-import com.oannes.common.Invoker;
-import com.oannes.common.Protocol;
-import com.oannes.common.URL;
 import com.oannes.common.exception.RpcException;
 
 public class RegisterDirection implements NotifyListener,Direction{
@@ -41,7 +38,8 @@ public class RegisterDirection implements NotifyListener,Direction{
 		if(CollectionUtils.isEmpty(urls)){
 			return ;
 		}
-		Protocol protocol=SpringBeanUtils.getBean(Protocol.class);
+		ProtocolFactory protocolFactory=BootServiceManager.INSTANCE.findBootService(ProtocolFactory.class);
+		Protocol protocol=protocolFactory.getProtocol(null);
 		for(URL url:urls){
 			try {
 				Invoker invoker = (Invoker) protocol.refer(url);
@@ -67,8 +65,8 @@ public class RegisterDirection implements NotifyListener,Direction{
 	public Invoker lookUp(URL url,Invocation invocation) throws RpcException {
 		// TODO Auto-generated method stub
 		List<Invoker>invokers=invokerMap.get(buildKey(url));
-		ClusterFactory cf=SpringBeanUtils.getBean(ClusterFactory.class);
-		LoadBalanceFactory lbf=SpringBeanUtils.getBean(LoadBalanceFactory.class);
+		ClusterFactory cf= BootServiceManager.INSTANCE.findBootService(ClusterFactory.class);
+		LoadBalanceFactory lbf=BootServiceManager.INSTANCE.findBootService(LoadBalanceFactory.class);
 		String clusterName=url.getParameter("cluster");
 		String loadBalanceName=url.getParameter("loadBalance");
 		return cf.getCluster(clusterName).select(invokers, lbf.getLoadBalance(loadBalanceName), invocation, url);

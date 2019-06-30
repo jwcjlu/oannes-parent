@@ -4,12 +4,23 @@ package com.jwcjlu.oannes.common.services;
 import java.io.IOException;
 
 public interface BootService {
-    void initialize() throws Throwable;
+   default void initialize() throws Throwable{
 
-    void boot();
+   }
 
-    void onComplete();
+   default void boot(){
 
-    void shutdown() throws IOException;
+   }
+
+   default void onComplete(){
+
+   }
+
+    default void shutdown() throws IOException{
+
+    }
+    default int order(){
+       return 1;
+    }
 
 }

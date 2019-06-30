@@ -1,5 +1,6 @@
 package com.jwcjlu.oannes.config.spring.beanFactory;
 
+import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import com.jwcjlu.oannes.config.OannService;
 import com.jwcjlu.oannes.config.ServiceBean;
 import org.springframework.beans.BeansException;
@@ -7,10 +8,9 @@ import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.beans.factory.support.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
@@ -19,8 +19,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
+import java.beans.Introspector;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -28,7 +30,7 @@ import java.util.Set;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.rootBeanDefinition;
 
 public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware,
-        ResourceLoaderAware, BeanClassLoaderAware {
+        ResourceLoaderAware, BeanClassLoaderAware, ApplicationContextAware {
     private Environment environment;
     private ResourceLoader resourceLoader;
     private ClassLoader classLoader;
@@ -59,7 +61,10 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
         }
 
     }
-
+    private String buildDefaultBeanName(Class clazz) {
+        String shortClassName = ClassUtils.getShortName(clazz);
+        return Introspector.decapitalize(shortClassName);
+    }
     private void registerServiceBean(Set<BeanDefinitionHolder> beanDefinitionHolders,BeanDefinitionRegistry beanDefinitionRegistry) {
         for(BeanDefinitionHolder holder:beanDefinitionHolders){
             BeanDefinitionBuilder builder = rootBeanDefinition(ServiceBean.class);
@@ -73,7 +78,7 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
             builder.addPropertyValue("interfaces",interfaceClass);
             builder.addPropertyValue("oannService",service);
             builder.setLazyInit(false);
-            beanDefinitionRegistry.registerBeanDefinition(holder.getBeanName(),builder.getBeanDefinition());
+            beanDefinitionRegistry.registerBeanDefinition(buildDefaultBeanName(interfaceClass),builder.getBeanDefinition());
         }
     }
 
@@ -126,5 +131,8 @@ public class ServiceAnnotationBeanPostProcessor implements BeanDefinitionRegistr
     }
 
 
-
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringBeanUtils.setContext(applicationContext);
+    }
 }

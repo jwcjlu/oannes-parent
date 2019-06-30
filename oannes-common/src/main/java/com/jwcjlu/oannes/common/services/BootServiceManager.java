@@ -14,10 +14,13 @@ public enum BootServiceManager {
     private Map<Class, Service> serviceMap = new ConcurrentHashMap<>();
 
     public void boot() {
+        if(boot){
+            return;
+        }
         bootedServices = loadAllServices();
         initialize();
-        boot();
         onComplete();
+        boot=true;
 
     }
 

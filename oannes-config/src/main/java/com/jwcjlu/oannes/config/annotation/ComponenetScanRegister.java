@@ -1,6 +1,7 @@
 package com.jwcjlu.oannes.config.annotation;
 
 import com.jwcjlu.oannes.common.services.BootServiceManager;
+import com.jwcjlu.oannes.config.spring.ServiceManagerStartup;
 import com.jwcjlu.oannes.config.spring.beanFactory.ConsumerAnnotationBeanPostProcessor;
 import com.jwcjlu.oannes.config.spring.beanFactory.ServiceAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -22,10 +23,20 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ro
 public class ComponenetScanRegister implements ImportBeanDefinitionRegistrar  {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+        BootServiceManager.INSTANCE.boot();
         Set<String> basePackages=getPackagesToScan(annotationMetadata);
         registerServiceAnnotationBeanPostProcessor(basePackages,beanDefinitionRegistry);
         registerConsumerAnnotationBeanPostProcessor(beanDefinitionRegistry);
+        registerStartupBeanPostProcessor(beanDefinitionRegistry);
     }
+
+    private void registerStartupBeanPostProcessor(BeanDefinitionRegistry beanDefinitionRegistry) {
+        BeanDefinitionBuilder builder = rootBeanDefinition(ServiceManagerStartup.class);
+        builder.setRole(BeanDefinition.ROLE_APPLICATION);
+        BeanDefinitionReaderUtils.registerWithGeneratedName(builder.getBeanDefinition(), beanDefinitionRegistry);
+
+    }
+
     private void registerServiceAnnotationBeanPostProcessor(Set<String> packagesToScan, BeanDefinitionRegistry registry) {
 
         BeanDefinitionBuilder builder = rootBeanDefinition(ServiceAnnotationBeanPostProcessor.class);

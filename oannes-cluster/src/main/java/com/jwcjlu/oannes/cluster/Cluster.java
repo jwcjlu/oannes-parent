@@ -2,6 +2,7 @@ package com.jwcjlu.oannes.cluster;
 
 import java.util.List;
 
+import com.jwcjlu.oannes.common.services.BootService;
 import com.oannes.common.Invocation;
 import com.oannes.common.Invoker;
 import com.oannes.common.LoadBalance;
@@ -24,7 +25,7 @@ import com.oannes.common.exception.RpcException;
  *
  * </pre>
  */
-public interface Cluster {
+public interface Cluster extends BootService {
 
 	
 	public void registerFactory();

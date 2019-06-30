@@ -5,16 +5,15 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import com.jwcjlu.oannes.common.services.BootServiceManager;
 import com.oannes.common.Invocation;
 import com.oannes.common.Invoker;
 import com.oannes.common.LoadBalance;
 import com.oannes.common.exception.RpcException;
 
 public abstract class AbstractLoadBalance implements LoadBalance{
-	@Resource
 	private LoadBalanceFactory loadBalanceFactory;
 	@Override
-	@PostConstruct
 	public void registerFactory() {
 		// TODO Auto-generated method stub
 		loadBalanceFactory.registerLoadBalance(getName(), this);
@@ -29,4 +28,10 @@ public abstract class AbstractLoadBalance implements LoadBalance{
 	}
 	@SuppressWarnings("rawtypes")
 	public abstract  Invoker doSelect(List<Invoker> invokers, Invocation invocation);
+
+	@Override
+	public void onComplete() {
+		loadBalanceFactory= BootServiceManager.INSTANCE.findBootService(LoadBalanceFactory.class);
+		registerFactory();
+	}
 }

@@ -1,4 +1,7 @@
 package com.oannes.common;
+
+import com.jwcjlu.oannes.common.services.BootService;
+
 /**
  * <pre>
  * 
@@ -15,7 +18,7 @@ package com.oannes.common;
  *
  * </pre>
  */
-public interface Protocol {
+public interface Protocol extends BootService {
 	/**
 	 * 引用
 	 * TODO.

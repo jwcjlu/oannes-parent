@@ -1,8 +1,10 @@
 package com.jwcjlu.oannes.cluster;
 
+import com.jwcjlu.oannes.common.services.BootServiceManager;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
+import java.io.IOException;
 
 
 /**
@@ -22,14 +24,18 @@ import javax.annotation.Resource;
  * </pre>
  */
 public abstract class AbstractCluster implements Cluster{
-	@Resource
+
 	private ClusterFactory clusterFactory;
 	@Override
-	@PostConstruct
 	public void registerFactory() {
 		// TODO Auto-generated method stub
 		clusterFactory.registerCluster(getName(), this);
 	}
 
+	@Override
+	public void onComplete() {
+		clusterFactory= BootServiceManager.INSTANCE.findBootService(ClusterFactory.class);
+		registerFactory();
+	}
 }
 

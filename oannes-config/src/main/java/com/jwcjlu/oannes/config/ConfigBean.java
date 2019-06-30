@@ -52,6 +52,7 @@ public abstract class ConfigBean  implements Serializable{
 		host=NetUtil.getRemoteAddress().getHostAddress();
 		parameter.put("host",host );
 		path=service.interfaces().getName();
+		port=Integer.valueOf(environment.getProperty("oannes.bind.port"));
 		interfaces=service.interfaces();
 	
 	}

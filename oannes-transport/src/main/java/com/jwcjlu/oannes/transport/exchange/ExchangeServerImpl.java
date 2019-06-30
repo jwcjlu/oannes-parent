@@ -1,10 +1,10 @@
 package com.jwcjlu.oannes.transport.exchange;
 
+import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import io.netty.channel.Channel;
 
 import java.lang.reflect.Method;
 
-import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import com.jwcjlu.oannes.transport.Header;
 import com.jwcjlu.oannes.transport.MsgType;
 import com.jwcjlu.oannes.transport.NettyServer;
@@ -24,11 +24,11 @@ public class ExchangeServerImpl implements ExchangeServer {
 	@Override
 	public void reply(Channel channel, RpcRequest request) {
 		// TODO Auto-generated method stub
-		 Object obj=SpringBeanUtils.getBean(request.getType());
-		 Method method;
-		 RpcResponse res=new RpcResponse();
-		 OannesMessage  msg=new OannesMessage();
+		Method method;
+		RpcResponse res=new RpcResponse();
+		OannesMessage  msg=new OannesMessage();
 		try {
+			Object obj= SpringBeanUtils.getBean(request.getType());
 			method = obj.getClass().getDeclaredMethod(request.getMethod(), request.getParameterTypes());
 			 Object result=method.invoke(obj, request.getArgs());
 			 res.setId(request.getId());

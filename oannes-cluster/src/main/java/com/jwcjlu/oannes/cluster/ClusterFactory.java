@@ -1,11 +1,10 @@
 package com.jwcjlu.oannes.cluster;
 
+import com.jwcjlu.oannes.common.services.BootService;
+import com.oannes.common.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.stereotype.Component;
-
-import com.oannes.common.util.StringUtils;
 
 /**
  * <pre>
@@ -23,8 +22,8 @@ import com.oannes.common.util.StringUtils;
  *
  * </pre>
  */
-@Component
-public class ClusterFactory {
+
+public class ClusterFactory implements BootService {
     private  Map<String,Cluster> clusterMap=new HashMap<String,Cluster>();
 	public  Cluster getCluster(String name){
 		if(StringUtils.isNotEmpty(name)){

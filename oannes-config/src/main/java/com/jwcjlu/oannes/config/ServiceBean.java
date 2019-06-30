@@ -1,5 +1,7 @@
 package com.jwcjlu.oannes.config;
 
+import com.jwcjlu.oannes.common.services.BootServiceManager;
+import com.oannes.common.ProtocolFactory;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class ServiceBean<T> extends ConfigBean implements InitializingBean, Envi
 	public void afterPropertiesSet() throws Exception {
 		setter(oannService);
 		URL url =builderURL();
-		OannesProtocol.getInstance().export(url);
+		BootServiceManager.INSTANCE.findBootService(ProtocolFactory.class).getProtocol(null).export(url);
 	}
 
 

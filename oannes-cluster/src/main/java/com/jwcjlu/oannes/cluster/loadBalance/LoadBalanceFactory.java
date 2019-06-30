@@ -3,6 +3,7 @@ package com.jwcjlu.oannes.cluster.loadBalance;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jwcjlu.oannes.common.services.BootService;
 import org.springframework.stereotype.Component;
 
 import com.oannes.common.LoadBalance;
@@ -25,7 +26,7 @@ import com.oannes.common.util.StringUtils;
  * </pre>
  */
 @Component
-public class LoadBalanceFactory {
+public class LoadBalanceFactory implements BootService {
 	  private  Map<String,LoadBalance> loadBalanceMap=new HashMap<String,LoadBalance>();
 		public  LoadBalance getLoadBalance(String name){
 			if(StringUtils.isNotEmpty(name)){

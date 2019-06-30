@@ -21,7 +21,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
-import com.jwcjlu.oannes.common.spring.SpringBeanUtils;
 import com.jwcjlu.oannes.config.ConsumerBean;
 import com.jwcjlu.oannes.config.OannConsumer;
 import com.jwcjlu.oannes.config.OannService;
@@ -42,7 +41,7 @@ public class BeanScannerConfigurer  implements DisposableBean, BeanFactoryPostPr
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
-		SpringBeanUtils.setContext(applicationContext);
+
 	}
 
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
