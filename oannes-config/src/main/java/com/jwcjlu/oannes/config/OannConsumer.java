@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface OannConsumer {
-	String backupAddress() default "localhost:2181";
 	int port() default 8888;
 	String host() default "localhost";
 	String group() default "";

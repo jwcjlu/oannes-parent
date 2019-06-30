@@ -36,8 +36,16 @@ import com.oannes.common.threadpool.NamedThreadFactory;
  *
  * </pre>
  */
-@Service("oannesProtocol")
 public class OannesProtocol implements Protocol{
+	private static OannesProtocol protocol;
+	private OannesProtocol(){}
+	public static OannesProtocol getInstance(){
+		if(protocol==null) {
+			protocol = new OannesProtocol();
+		}
+		return protocol;
+	}
+
 	private volatile  boolean isServer=false;
 	private static final ExecutorService  service=Executors.newCachedThreadPool(new NamedThreadFactory("oannesProtocol", true));
 	public void export(URL url){

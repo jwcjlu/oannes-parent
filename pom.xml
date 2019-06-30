@@ -21,12 +21,12 @@
 	    <id>jdk17</id>  
 	    <activation>  
 	        <activeByDefault>true</activeByDefault>  
-	        <jdk>1.7</jdk>  
+	        <jdk>1.8</jdk>
 	    </activation>  
 	    <properties>  
-	        <maven.compiler.source>1.7</maven.compiler.source>  
-	        <maven.compiler.target>1.7</maven.compiler.target>  
-	        <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>  
+	        <maven.compiler.source>1.8</maven.compiler.source>
+	        <maven.compiler.target>1.8</maven.compiler.target>
+	        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 	    </properties>   
 	</profile>  
   </profiles>
@@ -41,6 +41,8 @@
 		<zkclient_version>0.1</zkclient_version>
 		<fastjson_version>1.1.41</fastjson_version>
 		<netty_version>4.1.6.Final</netty_version>
+	  <mockito.version>1.10.19</mockito.version>
+	  <curator.version>2.6.0</curator.version>
    </properties>
   <dependencies>
   <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
@@ -91,5 +93,31 @@
 	    <artifactId>netty-all</artifactId>
 	    <version>${netty_version}</version>
 	</dependency>
+	  <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+	  <dependency>
+		  <groupId>org.projectlombok</groupId>
+		  <artifactId>lombok</artifactId>
+		  <version>1.18.4</version>
+		  <scope>provided</scope>
+	  </dependency>
+	  <!-- https://mvnrepository.com/artifact/junit/junit -->
+	  <dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>4.11</version>
+		  <scope>test</scope>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.mockito</groupId>
+		  <artifactId>mockito-all</artifactId>
+		  <version>${mockito.version}</version>
+		  <scope>test</scope>
+	  </dependency>
+	  <dependency>
+		  <groupId>org.apache.curator</groupId>
+		  <artifactId>curator-test</artifactId>
+		  <version>${curator.version}</version>
+		  <scope>test</scope>
+	  </dependency>
   </dependencies>
 </project>

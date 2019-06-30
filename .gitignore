@@ -1,0 +1,43 @@
+#common ignore
+.idea/
+.svn/
+*.iml
+.settings/
+.classpath
+.project
+/lib/
+/logs/
+/input/
+/output/
+settings.gradle
+edts_metadata.json
+
+#java files ignore
+*.class
+# Package Files #
+*.jar
+*.war
+*.ear
+log.txt*
+hs_err_pid*
+
+#maven ignore
+target/
+src/main/webapp/WEB-INF/classes/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Exclude maven wrapper
+!/.mvn/wrapper/maven-wrapper.jar
+
+#gradle ignore
+.gradle
+/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache

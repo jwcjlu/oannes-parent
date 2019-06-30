@@ -14,7 +14,6 @@ public @interface OannService {
 	Class interfaces();
 	String group() default "";
 	String version() default"";
-	String backupAddress() default "localhost:2181";
 	int port() default 8888;
 
 }

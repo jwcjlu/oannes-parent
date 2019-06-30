@@ -13,7 +13,13 @@ import com.oannes.common.NetUtil;
 import com.oannes.common.URL;
 import com.oannes.common.util.MapSortUtil;
 import com.oannes.common.util.StringUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.core.env.Environment;
 
+@Getter
+@Setter
 public abstract class ConfigBean  implements Serializable{
 
 	/**
@@ -28,6 +34,9 @@ public abstract class ConfigBean  implements Serializable{
 	protected String host;
 	protected int port;
 	protected String path;
+	protected String applicationName;
+	protected String registerUrl;
+	protected Environment  environment;
 	static{
 	    
 	    filterKeys.add("interface");
@@ -36,56 +45,24 @@ public abstract class ConfigBean  implements Serializable{
 	}
 
 	protected Map<String,Object> parameter=new HashMap<String,Object>();
-
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public Class getInterfaces() {
-		return interfaces;
-	}
-	public void setInterfaces(Class interfaces) {
-		this.interfaces = interfaces;
-	}
-	public String getProvider() {
-		return provider;
-	}
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-	public String getHost() {
-		return host;
-	}
-	public void setHost(String host) {
-		this.host = host;
-	}
-	public int getPort() {
-		return port;
-	}
-	public void setPort(int port) {
-		this.port = port;
-	}
-	public void setter(OannService service,RegisterBean register){
+	public void setter(OannService service){
 		parameter.put("group", service.group());
 		parameter.put("interface", service.interfaces().getName());
 		parameter.put("version", service.version());
-		parameter.put("port", register.get("port"));
-		port=Integer.parseInt(register.get("port").toString());;
 		host=NetUtil.getRemoteAddress().getHostAddress();
 		parameter.put("host",host );
 		path=service.interfaces().getName();
+		interfaces=service.interfaces();
 	
 	}
-	public void setter(OannConsumer consumer,RegisterBean register){
+	public void setter(OannConsumer consumer){
+		interfaces=consumer.interfaces();
 		parameter.put("group", consumer.group());
 		path=consumer.interfaces().getName();
 		parameter.put("interface", consumer.interfaces().getName());
 		parameter.put("version", consumer.version());
-		parameter.put("port",register.get("port"));
 		parameter.put("host", consumer.host());
-		port=Integer.parseInt(register.get("port").toString());
+
 		
 			
 	}
@@ -115,6 +92,7 @@ public  URL builderURL(){
 		   }
 	   }
 	   URL url=URL.valueOf(sb.toString());
+	   url.setBackupAddress(environment.getProperty("oannes.registry.address"));
 	
 	  return url;
    }
