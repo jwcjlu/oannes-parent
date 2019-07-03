@@ -20,11 +20,6 @@ public class NettyServer extends AbstractServer{
 	}
 	private  ServerBootstrap  serBootstrap;
 
-	@Override
-	public void colse() throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
  
 	@Override
 	public void doOpen() {
@@ -47,11 +42,8 @@ public class NettyServer extends AbstractServer{
 				
 			}
 		});
-		ChannelFuture f= serBootstrap.bind().sync();
-		
-		System.out.println(NettyServer.class.getName() + "started and listen on “" + f.channel(
-				).localAddress());
-		f.channel().closeFuture().sync();
+		ChannelFuture f= serBootstrap.bind();
+
 	  }catch(Exception e){
 		  e.printStackTrace();
 	}finally{

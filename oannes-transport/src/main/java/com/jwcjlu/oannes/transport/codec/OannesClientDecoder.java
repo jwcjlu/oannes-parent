@@ -55,6 +55,7 @@ public class OannesClientDecoder extends LengthFieldBasedFrameDecoder
         if(length>0&&type==MsgType.RPC_RESP.getValue()){
             byte[]dst=new byte[length];
             in.readBytes(dst);
+
             return  (RpcResponse) SerializeUtil.derialize(dst);
             
         }

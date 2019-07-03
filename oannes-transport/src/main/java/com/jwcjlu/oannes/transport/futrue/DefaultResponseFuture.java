@@ -49,7 +49,7 @@ public class DefaultResponseFuture implements ResponseFuture{
 	}
 	private Object  fromReturnToResponse() throws RemoteException{
 		if(reponse==null){
-			throw new RemoteException("dianyongshibei");
+			throw new RemoteException("dispatch failure!!!");
 		}
 		return reponse.getResult();
 	}
