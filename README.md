@@ -11,8 +11,8 @@ oannes是一款rpc框架，通信采用netty框架，实现了软负载均衡，
 #### 2:编译工程
 #### 3:打开工程oannes-demo下面有如下过程，分别启动demo-service和demo-consumer
 <p align='center'>
-<img src='image/serviceMain.jpg' title='images' style='max-width:600px'></img>
+<img src='image/serviceMain.png' title='images' style='max-width:600px'></img>
 </p>
 <p align='center'>
-<img src='image/comsumer.jpg' title='images' style='max-width:600px'></img>
+<img src='image/comsumer.png' title='images' style='max-width:600px'></img>
 </p>
