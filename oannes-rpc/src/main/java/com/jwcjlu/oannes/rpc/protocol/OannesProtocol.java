@@ -4,7 +4,7 @@ import com.jwcjlu.oannes.filter.InvokerWapper;
 import com.jwcjlu.oannes.register.Register;
 import com.jwcjlu.oannes.register.ZookeeperRegister;
 import com.jwcjlu.oannes.rpc.invoke.OannesInvoker;
-import com.jwcjlu.oannes.transport.RemoteException;
+import com.jwcjlu.oannes.transport.excption.RemoteException;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClientImpl;
 import com.jwcjlu.oannes.transport.exchange.ExchangeServerImpl;
@@ -13,10 +13,8 @@ import com.oannes.common.Invoker;
 import com.oannes.common.URL;
 import com.oannes.common.threadpool.NamedThreadFactory;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <pre>

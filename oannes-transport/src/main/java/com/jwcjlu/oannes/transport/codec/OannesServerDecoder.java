@@ -1,11 +1,11 @@
 package com.jwcjlu.oannes.transport.codec;
 
+import com.oannes.common.util.SerializeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
-import com.jwcjlu.oannes.transport.MsgType;
-import com.jwcjlu.oannes.transport.SerializeUtil;
+import com.jwcjlu.oannes.transport.protocol.MsgType;
 import com.oannes.common.RpcRequest;
 
 /**

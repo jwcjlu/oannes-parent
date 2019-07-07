@@ -1,7 +1,6 @@
 package netty.in.action.protocol;
 
-import com.jwcjlu.oannes.transport.SerializeUtil;
-
+import com.oannes.common.util.SerializeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -28,7 +27,7 @@ public class NettyMessageDecoder extends LengthFieldBasedFrameDecoder {
 			ByteBuf msgs=buf.readBytes(length);
 			byte[]dst=new byte[msgs.readableBytes()];
 			msgs.readBytes(dst);
-			obj=SerializeUtil.derialize(dst);
+			obj= SerializeUtil.derialize(dst);
 			NettyMessage msg=new NettyMessage();
 			Header header=new Header(type,version,length);
 			msg.setHeader(header);

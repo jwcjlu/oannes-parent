@@ -5,10 +5,10 @@ import io.netty.channel.Channel;
 
 import java.lang.reflect.Method;
 
-import com.jwcjlu.oannes.transport.Header;
-import com.jwcjlu.oannes.transport.MsgType;
+import com.jwcjlu.oannes.transport.protocol.Header;
+import com.jwcjlu.oannes.transport.protocol.MsgType;
 import com.jwcjlu.oannes.transport.NettyServer;
-import com.jwcjlu.oannes.transport.OannesMessage;
+import com.jwcjlu.oannes.transport.protocol.OannesMessage;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.RpcResponse;
 import com.oannes.common.URL;

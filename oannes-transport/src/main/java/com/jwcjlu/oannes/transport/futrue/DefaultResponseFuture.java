@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.jwcjlu.oannes.transport.RemoteException;
+import com.jwcjlu.oannes.transport.excption.RemoteException;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.RpcResponse;
 

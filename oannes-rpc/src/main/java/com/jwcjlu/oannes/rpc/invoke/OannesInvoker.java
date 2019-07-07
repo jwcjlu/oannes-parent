@@ -3,7 +3,6 @@ package com.jwcjlu.oannes.rpc.invoke;
 import java.util.UUID;
 
 import com.jwcjlu.oannes.rpc.proxy.JdkProxyHandler;
-import com.jwcjlu.oannes.transport.RemoteException;
 import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
 import com.oannes.common.Invocation;
 import com.oannes.common.Invoker;

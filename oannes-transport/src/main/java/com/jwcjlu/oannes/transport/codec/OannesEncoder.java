@@ -1,12 +1,12 @@
 package com.jwcjlu.oannes.transport.codec;
 
+import com.oannes.common.util.SerializeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import com.jwcjlu.oannes.transport.OannesMessage;
-import com.jwcjlu.oannes.transport.OannesMessageException;
-import com.jwcjlu.oannes.transport.SerializeUtil;
+import com.jwcjlu.oannes.transport.protocol.OannesMessage;
+import com.jwcjlu.oannes.transport.excption.OannesMessageException;
 
 /**
  * <pre>
@@ -42,7 +42,7 @@ public class OannesEncoder extends MessageToByteEncoder<OannesMessage>
            out.writeInt(0);
             return ;
         }
-        byte[]body=SerializeUtil.serialize(msg.getBody());
+        byte[]body= SerializeUtil.serialize(msg.getBody());
         out.writeInt(body.length);
         out.writeBytes(body);
     }

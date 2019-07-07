@@ -3,6 +3,7 @@ package com.jwcjlu.oannes.transport;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 
+import com.jwcjlu.oannes.transport.excption.RemoteException;
 import io.netty.channel.Channel;
 
 public interface Server {

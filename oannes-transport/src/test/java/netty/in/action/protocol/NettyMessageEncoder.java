@@ -1,16 +1,9 @@
 package netty.in.action.protocol;
 
+import com.oannes.common.util.SerializeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-
-import org.jboss.marshalling.ObjectOutputStreamMarshaller;
-
-import com.jwcjlu.oannes.transport.SerializeUtil;
 
 /**
  * <pre>
@@ -41,7 +34,7 @@ public class NettyMessageEncoder extends MessageToByteEncoder<NettyMessage>{
 		out.writeInt(msg.getHeader().getVersion());
 		byte[]buff=null;
 		if(msg.getBody()!=null){
-			buff=SerializeUtil.serialize(msg.getBody());
+			buff= SerializeUtil.serialize(msg.getBody());
 			out.writeInt(buff.length);
 			out.writeBytes(buff);
 		}else{

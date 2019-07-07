@@ -1,8 +1,7 @@
 package com.jwcjlu.oannes.transport.exchange;
 
-import com.jwcjlu.oannes.transport.RemoteException;
+import com.jwcjlu.oannes.transport.excption.RemoteException;
 import com.oannes.common.Invocation;
-import com.oannes.common.RpcResponse;
 import com.oannes.common.URL;
 
 public interface ExchangeClient {
