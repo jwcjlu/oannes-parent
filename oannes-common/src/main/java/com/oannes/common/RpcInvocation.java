@@ -3,18 +3,21 @@ package com.oannes.common;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class RpcInvocation implements Invocation {
 	private Method method;
 	private Object[]agrs;
 	private Class<?> interfaces;
+	private boolean asyn;
 	private Map<String,Object> attributes=new HashMap<String,Object>();
+
 	
 	public RpcInvocation(Method method, Object[] agrs, Class<?> interfaces) {
-		super();
 		this.method = method;
 		this.agrs = agrs;
 		this.interfaces = interfaces;
+		asyn=method.getReturnType().isAssignableFrom(CompletableFuture.class);
 	}
 
 	@Override
@@ -45,6 +48,16 @@ public class RpcInvocation implements Invocation {
 	public Class<?> getInterface() {
 		// TODO Auto-generated method stub
 		return interfaces;
+	}
+	public boolean isAsyn(){
+		return asyn;
+	}
+	public Result newResult(){
+		if(asyn){
+			return new AsynResult();
+		}else {
+			return new Result();
+		}
 	}
 
 }

@@ -45,12 +45,12 @@ public class OannesInvoker implements Invoker{
 		request.setMethod(invocation.getMethod().getName());
 		request.setType(invocation.getInterface());
 		Object obj=null;
-		Result result=new Result();
+		Result result=invocation.newResult();
 		try{
           obj=client.request(invocation);
 		  result.setSuccessful(true);
 		  result.setObj(obj);
-		}catch (RemoteException e) {
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.setException(e);

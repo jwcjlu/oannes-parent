@@ -28,7 +28,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<RpcResponse>{
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		// TODO Auto-generated method stub
 		super.channelActive(ctx);
-		client.countDown();
+
 	}
 	
 

@@ -6,7 +6,7 @@ import com.oannes.common.RpcResponse;
 import com.oannes.common.URL;
 
 public interface ExchangeClient {
-	public void connect(URL url) throws RemoteException;
-	Object request(Invocation  invocation) throws RemoteException;
-	public void countDown();
+	 void connect(URL url) throws RemoteException;
+	Object request(Invocation  invocation) throws Exception;
+
 }

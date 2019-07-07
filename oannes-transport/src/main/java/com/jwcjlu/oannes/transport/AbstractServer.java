@@ -34,7 +34,7 @@ public abstract class AbstractServer implements Server {
 	@Override
 	public Collection<Channel> getChannels() {
 		// TODO Auto-generated method stub
-		return channels.values();
+		return null;
 	}
 	@Override
 	public Channel getChannel(InetSocketAddress remoteAddress) {
@@ -42,17 +42,9 @@ public abstract class AbstractServer implements Server {
 		String key=remoteAddress.getHostString()+remoteAddress.getPort();
 		return channels.get(key);
 	}
-	@Override
-	public void close() throws RemoteException{
-		Collection<Channel> channels=getChannels();
-		if(channels==null){
-			return;
-		}
-		for(Channel channel:channels){
-			channel.close();
-		}
-
+	public static void main(String[] args) {
+		InetSocketAddress sa=new InetSocketAddress(1111);
+		System.out.println(NetUtil.getRemoteAddress());
 	}
-
 
 }

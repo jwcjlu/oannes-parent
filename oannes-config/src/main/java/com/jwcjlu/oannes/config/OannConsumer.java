@@ -14,5 +14,6 @@ public @interface OannConsumer {
 	String group() default "";
 	String version() default"";
 	Class interfaces();
+	boolean asyn() default false;
 
 }

@@ -9,6 +9,7 @@ public class RpcRequest implements Request, Serializable{
 	private Object[] args;
 	private String method;
 	private Class<?>[] parameterTypes;
+	private boolean asyn;
 
 
 	public Class<?> getType() {
@@ -49,6 +50,12 @@ public class RpcRequest implements Request, Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	public void setAsyn(boolean asyn){
+		this.asyn=asyn;
+	}
+	public boolean isAsyn(){
+		return asyn;
 	}
 	
 }

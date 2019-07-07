@@ -26,6 +26,10 @@ import io.netty.util.concurrent.GenericFutureListener;
  */
 public class HeartbeatHander  extends ChannelInboundHandlerAdapter
 {
+    private Client client;
+    public HeartbeatHander(Client client){
+        this.client=client;
+    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {

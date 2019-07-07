@@ -1,6 +1,6 @@
 package com.jwcjlu.oannes.transport;
 
-public class RemoteException extends Throwable{
+public class RemoteException extends Exception{
 
 	/**
 	 * 

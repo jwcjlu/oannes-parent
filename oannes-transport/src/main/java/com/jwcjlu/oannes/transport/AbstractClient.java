@@ -1,89 +1,142 @@
 package com.jwcjlu.oannes.transport;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import com.jwcjlu.oannes.transport.clientpool.ClientFactory;
+import com.jwcjlu.oannes.transport.futrue.DefaultResponseFuture;
+import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
+import com.oannes.common.RpcRequest;
+import com.oannes.common.RpcResponse;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
+import io.netty.util.concurrent.Promise;
+import lombok.extern.slf4j.Slf4j;
 
-import io.netty.util.NetUtil;
+import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractClient implements Client {
-	private SocketAddress connectAddress;
-	private Lock connectLock = new ReentrantLock();
+@Slf4j
+public abstract class AbstractClient extends SimpleChannelInboundHandler<RpcResponse> implements Client {
+    private ClientFactory clientFactory;
 
-	public AbstractClient(String host, int port) {
-		connectAddress = new InetSocketAddress(host, port);
-		try {
-			doOpen();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			try {
-				close();
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
+    public AbstractClient(ClientFactory factory) {
+        this.clientFactory = factory;
+    }
 
-	public void connect() throws  RemoteException {
-		connectLock.lock();
-		try {
-			if (isConnected()) {
-				return;
-			}
-			doConnect();
-			if (!isConnected()) {
-				throw new RemoteException("Failed connect to server " + getConnectAddress() + " from "
-						+ getClass().getSimpleName() + " " + NetUtil.LOCALHOST.getHostAddress()
-						 + ", cause: Connect wait timeout: " + "ms.");
-			}
-		} catch (RemoteException e) {
-			throw e;
-		} finally {
-			connectLock.unlock();
-		}
-	}
+    public static final String READ_TIMEOUT_HANDLER_NAME = "readTimeoutHandler";
+    private Channel channel;
+    private ChannelHandlerContext ctx;
 
-	@Override
-	public void reconnect() {
-		// TODO Auto-generated method stub
-		doReconnect();
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        try {
+            channel = ctx.channel();
+            this.ctx = ctx;
+        } finally {
+            super.channelActive(ctx);
+        }
+    }
 
-	}
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcResponse msg) throws Exception {
+        try {
+            DefaultResponseFuture.getResponsefutures().get(msg.getId()).receive(msg);
+        } finally {
+            removeReadTimeoutHandler();
 
-	@Override
-	public void close() throws RemoteException {
-		// TODO Auto-generated method stub
-		connectLock.lock();
-		try {
-			try {
-				doClose();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} finally {
-			connectLock.unlock();
-		}
-
-	}
-
-	protected abstract void doClose() throws InterruptedException;
-	protected  abstract void  doReconnect();
+        }
 
 
+    }
 
-	public SocketAddress getConnectAddress() {
-		return connectAddress;
-	}
+    public void closeChannel(Promise<Void> promise) {
+        channel.close().addListener(
+                new GenericFutureListener<Future<? super Void>>() {
+                    public void operationComplete(
+                            Future<? super Void> future)
+                            throws Exception {
+                        if (future
+                                .isSuccess()) {
+                            promise.setSuccess(null);
+                        } else {
+                            promise.setFailure(future
+                                    .cause());
+                        }
+                    }
 
-	public void setConnectAddress(SocketAddress connectAddress) {
-		this.connectAddress = connectAddress;
-	}
+                    ;
+                });
+    }
 
-	protected abstract void doConnect();
+    public void disconnect() {
+        if (channel == null) {
+        } else {
+            closeChannel(channel.newPromise());
+        }
+    }
 
-	public abstract void doOpen() throws RemoteException;
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        handlerExcption(cause);
+        super.exceptionCaught(ctx, cause);
+    }
+
+    protected void handlerExcption(Throwable cause) {
+        log.info("Disconnecting open connection to server");
+        disconnect();
+    }
+
+    @Override
+    public void close() throws RemoteException {
+        disconnect();
+    }
+
+    @Override
+    public boolean isConnected() throws RemoteException {
+        return channel.isActive();
+    }
+
+    @Override
+    public void send(Object msg) {
+        OannesMessage omsg=new OannesMessage();
+        Header header=new Header();
+        header.setType(MsgType.RPC_REQ.getValue());
+        omsg.setHeader(header);
+        omsg.setBody(msg);
+        channel.writeAndFlush(omsg);
+
+    }
+
+    public void startReadTimeoutHandler(long readTimeout) {
+        channel.pipeline().addBefore("handler", READ_TIMEOUT_HANDLER_NAME, new ReadTimeoutHandler(readTimeout, TimeUnit.MILLISECONDS));
+    }
+
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            // Log some info about this.
+            removeReadTimeoutHandler();
+        }
+    }
+
+    private void removeReadTimeoutHandler() {
+        try {
+            final ChannelPipeline pipeline = channel.pipeline();
+            if (pipeline.get(READ_TIMEOUT_HANDLER_NAME) != null) {
+                pipeline.remove(READ_TIMEOUT_HANDLER_NAME);
+            }
+        } finally {
+            clientFactory.getClientPool().returnObject(this);
+        }
+
+    }
+
+    @Override
+    public ResponseFuture request(RpcRequest msg) {
+        send(msg);
+        return new DefaultResponseFuture(msg);
+    }
 
 }

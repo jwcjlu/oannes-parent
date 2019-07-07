@@ -1,168 +1,63 @@
 package com.jwcjlu.oannes.transport;
 
+import com.jwcjlu.oannes.transport.clientpool.ClientFactory;
+import com.jwcjlu.oannes.transport.codec.OannesClientDecoder;
+import com.jwcjlu.oannes.transport.codec.OannesEncoder;
+import com.oannes.common.URL;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
+import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 
 import java.util.concurrent.TimeUnit;
 
-import com.jwcjlu.oannes.transport.codec.OannesClientDecoder;
-import com.jwcjlu.oannes.transport.codec.OannesEncoder;
-import com.jwcjlu.oannes.transport.exchange.ExchangeClient;
-import com.jwcjlu.oannes.transport.futrue.DefaultResponseFuture;
-import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
-import com.oannes.common.RpcRequest;
+public class NettyClient extends AbstractClient implements Client {
 
-public class NettyClient extends AbstractClient{
-	private Bootstrap bootstrap;
-	private volatile Channel channel;
-	private String key;
-	private EventLoopGroup group;
-	private ExchangeClient client;
+    private Bootstrap bootstrap;
 
-	public NettyClient(String host, int port,ExchangeClient client) {
-		super(host, port);
-	    key=host+":"+port;
-	    this.client=client;
-	}
+    public NettyClient(URL origin, ClientFactory clientFactory, EventLoopGroup eventExecutors) throws InterruptedException {
+        super(clientFactory);
+        bootstrap = new Bootstrap();
+        bootstrap.group(eventExecutors);
+        if (eventExecutors instanceof NioEventLoopGroup) {
+            bootstrap.channel(NioSocketChannel.class);
+        } else {
+            bootstrap.channel(EpollSocketChannel.class);
+        }
+        ChannelInitializer<Channel> initializer = new ChannelInitializer<Channel>() {
+            protected void initChannel(Channel ch) throws Exception {
+                initChannelPipeline(ch.pipeline());
+            }
 
+            ;
+        };
+        bootstrap.option(ChannelOption.TCP_NODELAY, true)
+                // 如果是延时敏感型应用，建议关闭Nagle算法
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .option(ChannelOption.RCVBUF_ALLOCATOR, AdaptiveRecvByteBufAllocator.DEFAULT);
+        bootstrap.handler(initializer);
+        ChannelFuture future = bootstrap.connect(origin.getHost(), origin.getPort()).sync();
+        if (future.isSuccess()) {
+            future.await(1000, TimeUnit.MILLISECONDS);
+        }
 
-	@Override
-	public boolean isConnected() throws RemoteException {
-		// TODO Auto-generated method stub
-		return channel!=null&&channel.isWritable();
-	}
-
-	@Override
-	public boolean isClose() throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected void doConnect() {
-		// TODO Auto-generated method stub
-		ChannelFuture f;
-		try {
-			
-		f = bootstrap.connect().sync();
-			channel=f.channel();
-			channel.closeFuture().sync();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			
-		}finally {
-			reconnect();
-			try {
-				TimeUnit.SECONDS.sleep(5);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-			}
-		}
-		
-	}
-
-	@Override
-	public void doOpen() throws RemoteException {
-		// TODO Auto-generated method stub
-		 group =new NioEventLoopGroup();
-		bootstrap=new Bootstrap();
-		
-		bootstrap.group(group).channel(NioSocketChannel.class)
-		.remoteAddress(getConnectAddress())
-		.handler(new ChannelInitializer<SocketChannel>() {
-
-			@Override
-			protected void initChannel(SocketChannel ch) throws Exception {
-				// TODO Auto-generated method stub
-				ch.pipeline()
-				.addLast( new OannesEncoder())
-				.addLast( new OannesClientDecoder(8192, 14, 4))
-				.addLast("idleStateHandler",new IdleStateHandler(0, 0, 90))
-				.addLast(new HeartbeatHander())
-				.addLast(new ClientHandler(client));
-			}
-		});
-		
-	}
+    }
 
 
-	@Override
-	public void send(Object msg) {
-		// TODO Auto-generated method stub
-	    OannesMessage omsg=new OannesMessage();
-	    Header header=new Header();
-	    header.setType(MsgType.RPC_REQ.getValue());
-	    omsg.setHeader(header);
-	    omsg.setBody(msg);
-		channel.writeAndFlush(omsg);
-	}
+    public void startReadTimeoutHandler() {
+        startReadTimeoutHandler(60 * 1000);
+    }
 
 
-	@Override
-	public ResponseFuture request(RpcRequest msg) {
-		// TODO Auto-generated method stub
-		   send(msg);
-		return new DefaultResponseFuture(msg);
-	}
+    private void initChannelPipeline(ChannelPipeline pipeline) {
+        pipeline.addLast( new OannesEncoder())
+                .addLast( new OannesClientDecoder(8192, 14, 4))
+                .addLast("idleStateHandler",new IdleStateHandler(0, 0, 90))
+                .addLast(new HeartbeatHander(this))
+                .addLast("handler", this);
+    }
 
-
-	@Override
-	protected void doClose() throws InterruptedException {
-		// TODO Auto-generated method stub
-		if(channel!=null){
-			try {
-				channel.close().sync();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if(bootstrap!=null){
-			bootstrap.group().shutdownGracefully().sync();
-		}
-	}
-	public String getKey(){
-		return key;
-	}
-
-
-	@Override
-	protected void doReconnect() {
-		// TODO Auto-generated method stub
-		try {
-			if(isConnected()){
-				return;
-			}
-		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if(channel!=null){
-			try {
-				System.out.println("开始重连！！！");
-				channel.disconnect().sync();
-				super.connect();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}else{
-			System.out.println("dafdsafsd");
-			try {
-				super.connect();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-	}
 }

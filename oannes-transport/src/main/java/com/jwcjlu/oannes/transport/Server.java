@@ -26,6 +26,6 @@ public interface Server {
 	    
 	    
 	    
-	    void close()throws RemoteException;
+	    void colse()throws RemoteException;
 
 }

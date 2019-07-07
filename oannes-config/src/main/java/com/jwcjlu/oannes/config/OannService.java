@@ -15,5 +15,7 @@ public @interface OannService {
 	String group() default "";
 	String version() default"";
 	int port() default 8888;
+	String host()default "";
+
 
 }

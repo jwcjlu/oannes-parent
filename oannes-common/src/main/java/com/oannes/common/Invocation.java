@@ -12,5 +12,7 @@ public interface Invocation {
 	void removeAttribute(String key);
 	
 	Class<?> getInterface();
+	Result newResult();
+	boolean isAsyn();
 
 }

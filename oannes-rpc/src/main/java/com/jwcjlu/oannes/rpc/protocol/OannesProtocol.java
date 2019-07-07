@@ -54,36 +54,19 @@ public class OannesProtocol extends AbstractProtocol {
 		
 	}
 	@SuppressWarnings("rawtypes")
-	public Object refer(final URL url) throws InterruptedException{
-		CountDownLatch  latch=new CountDownLatch(1);
-		final ExchangeClient client=new ExchangeClientImpl(latch);
-		service.execute(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				try {
-					client.connect(url);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		latch.await(3,TimeUnit.SECONDS);
+	public Object refer(final URL url) throws InterruptedException {
+		final ExchangeClient client=new ExchangeClientImpl();
+		try {
+			client.connect(url);
+		} catch (RemoteException e) {
+			throw new RuntimeException("connect failure");
+		}
 	    Invoker invoker=new InvokerWapper().buildFilterChain(new OannesInvoker(url,client));
 	    return  invoker;
 	}
 	void openServer(final URL url){
-		service.execute(new Runnable(){
+		new ExchangeServerImpl().bind(url);
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				new ExchangeServerImpl().bind(url);
-			}
-			
-		});
 		
 	}
 

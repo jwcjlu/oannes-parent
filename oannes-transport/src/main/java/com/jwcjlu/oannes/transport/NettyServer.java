@@ -1,6 +1,7 @@
 package com.jwcjlu.oannes.transport;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -13,6 +14,7 @@ import com.jwcjlu.oannes.transport.codec.OannesServerDecoder;
 import com.jwcjlu.oannes.transport.exchange.ExchangeServer;
 
 public class NettyServer extends AbstractServer{
+	private Channel channel;
 	
 	public NettyServer(String host, int port,ExchangeServer server) {	
 		super(host, port,server);
@@ -20,13 +22,19 @@ public class NettyServer extends AbstractServer{
 	}
 	private  ServerBootstrap  serBootstrap;
 
+	@Override
+	public void colse() throws RemoteException {
+		// TODO Auto-generated method stub
+		channel.close();
+		
+	}
  
 	@Override
 	public void doOpen() {
 		// TODO Auto-generated method stub
 		EventLoopGroup boss=new NioEventLoopGroup();
 		EventLoopGroup worker=new NioEventLoopGroup();
-		try{
+
 		serBootstrap=new ServerBootstrap();
 		serBootstrap.group(boss, worker);
 		serBootstrap.localAddress(getBindAddress()).channel(NioServerSocketChannel.class)
@@ -43,18 +51,12 @@ public class NettyServer extends AbstractServer{
 			}
 		});
 		ChannelFuture f= serBootstrap.bind();
-
-	  }catch(Exception e){
-		  e.printStackTrace();
-	}finally{
-		try {
-			boss.shutdownGracefully().sync();
-			worker.shutdownGracefully().sync();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		f.awaitUninterruptibly();
+		channel=f.channel();
 		
-	}
+		System.out.println(NettyServer.class.getName() + "started and listen on “" + f.channel(
+				).localAddress());
+
+
 	}
 }

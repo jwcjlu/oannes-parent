@@ -49,7 +49,10 @@ public abstract class ConfigBean  implements Serializable{
 		parameter.put("group", service.group());
 		parameter.put("interface", service.interfaces().getName());
 		parameter.put("version", service.version());
-		host=NetUtil.getRemoteAddress().getHostAddress();
+		host=service.host();
+		if(StringUtils.isEmpty(host)) {
+			host = NetUtil.getRemoteAddress().getHostAddress();
+		}
 		parameter.put("host",host );
 		path=service.interfaces().getName();
 		port=Integer.valueOf(environment.getProperty("oannes.bind.port"));
