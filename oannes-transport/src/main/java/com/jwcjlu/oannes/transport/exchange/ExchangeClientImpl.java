@@ -1,10 +1,12 @@
 package com.jwcjlu.oannes.transport.exchange;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import com.jwcjlu.oannes.transport.excption.RemoteException;
 import com.jwcjlu.oannes.transport.clientpool.ClientPool;
 import com.jwcjlu.oannes.transport.clientpool.ClientPoolManager;
+import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
 import com.oannes.common.Invocation;
 import com.oannes.common.RpcRequest;
 import com.oannes.common.URL;
@@ -33,7 +35,13 @@ public class ExchangeClientImpl implements ExchangeClient {
 		req.setParameterTypes(invocation.getMethod().getParameterTypes());
 		req.setType(invocation.getInterface());
 		req.setAsyn(invocation.isAsyn());
-		return clientPool.borrowObject().request(req).get();
+		CompletableFuture<Object> result=new CompletableFuture<>();
+		clientPool.borrowObject().request(req,result);
+		if(invocation.isAsyn()){
+			return result;
+		}else{
+			return result.get();
+		}
 
 
 	}

@@ -1,13 +1,8 @@
 package com.jwcjlu.oannes;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.stereotype.Service;
-
 import com.jwcjlu.oannes.config.OannConsumer;
+import org.springframework.stereotype.Service;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DemoAction {
@@ -16,17 +11,24 @@ public class DemoAction {
 	@OannConsumer(interfaces=HelloService.class,group="jwcjlu",version="1.0")
 	private HelloService  service;
 	public void start() throws Exception {
-        for (int i = 0; i < Integer.MAX_VALUE; i ++) {
-            try {
-            	String hello = demoService.sayHello("world" + i);
-            	/*service.sayHello();*/
-                System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + hello);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int time=new Random().nextInt(10);
-           TimeUnit.SECONDS.sleep(time);
-        }
+		for(int i=0;i<Integer.MAX_VALUE;i++) {
+			if(i%2==0){
+				String msg=demoService.sayHello("jinwei");
+				System.out.println(msg);
+				continue;
+			}
+			CompletableFuture<String> result = demoService.sayHi("world");
+			result.whenComplete((v, t) -> {
+				if (t != null) {
+					t.printStackTrace();
+				} else {
+					System.out.println(v);
+				}
+			});
+			TimeUnit.MILLISECONDS.sleep(500);
+
+		}
+
 	}
 	public DemoService getDemoService() {
 		return demoService;

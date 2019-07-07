@@ -14,39 +14,35 @@ import com.jwcjlu.oannes.transport.codec.OannesEncoder;
 import com.jwcjlu.oannes.transport.codec.OannesServerDecoder;
 import com.jwcjlu.oannes.transport.exchange.ExchangeServer;
 
-public class NettyServer extends AbstractServer{
-	private Channel channel;
-	
-	public NettyServer(String host, int port,ExchangeServer server) {	
-		super(host, port,server);
-		// TODO Auto-generated constructor stub	
-	}
-	private  ServerBootstrap  serBootstrap;
+import java.net.InetSocketAddress;
 
-	@Override
+public class NettyServer {
+	private Channel channel;
+	private NioEventLoopGroup binsgroup=new NioEventLoopGroup();
+	private EventLoopGroup boss=new NioEventLoopGroup(2);
+	private EventLoopGroup worker=new NioEventLoopGroup();
+	private ExchangeServer server;
+	private  ServerBootstrap  serBootstrap;
+	public NettyServer(String host, int port,ExchangeServer server) {
+		this.server=server;
+		doOpen(new InetSocketAddress(host,port));
+
+	}
 	public void colse() throws RemoteException {
-		// TODO Auto-generated method stub
 		channel.close();
 		
 	}
- 
-	@Override
-	public void doOpen() {
-		// TODO Auto-generated method stub
-		EventLoopGroup boss=new NioEventLoopGroup();
-		EventLoopGroup worker=new NioEventLoopGroup();
-
+	public void doOpen(InetSocketAddress address) {
 		serBootstrap=new ServerBootstrap();
 		serBootstrap.group(boss, worker);
-		serBootstrap.localAddress(getBindAddress()).channel(NioServerSocketChannel.class)
+		serBootstrap.localAddress(address).channel(NioServerSocketChannel.class)
 		.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				// TODO Auto-generated method stub
 				ch.pipeline()
 				.addLast( new OannesEncoder())
                 .addLast( new OannesServerDecoder(8192, 14, 4))
-				.addLast(new ServerHandler(server))
+				.addLast(binsgroup,new ServerHandler(server))
 				;
 				
 			}

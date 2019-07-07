@@ -4,6 +4,8 @@ import com.jwcjlu.oannes.transport.excption.RemoteException;
 import com.jwcjlu.oannes.transport.futrue.ResponseFuture;
 import com.oannes.common.RpcRequest;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface Client {
 	
 	void  close()throws RemoteException;
@@ -12,7 +14,7 @@ public interface Client {
 	
 	void send(Object msg);
 	
-	ResponseFuture request(RpcRequest msg);
+	ResponseFuture request(RpcRequest msg, CompletableFuture future);
 
 
 	void disconnect();

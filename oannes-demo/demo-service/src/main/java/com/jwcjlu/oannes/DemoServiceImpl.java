@@ -2,6 +2,7 @@ package com.jwcjlu.oannes;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 import com.jwcjlu.oannes.config.OannService;
 import com.oannes.common.NetUtil;
@@ -14,6 +15,13 @@ public class DemoServiceImpl implements DemoService {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] Hello " + msg  );
 
 		return "response return ["+msg+"] request from provider: "+NetUtil.getRemoteAddress();
+	}
+
+	@Override
+	public CompletableFuture<String> sayHi(String msg) {
+		return CompletableFuture.supplyAsync(()->{
+			return "hello -"+ msg;
+		});
 	}
 
 }

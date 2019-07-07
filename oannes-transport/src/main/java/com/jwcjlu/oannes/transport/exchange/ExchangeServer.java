@@ -6,8 +6,8 @@ import com.oannes.common.URL;
 import io.netty.channel.Channel;
 
 public interface ExchangeServer {
-	public void bind(URL url);
+	 void bind(URL url);
 	
-	public  void reply(Channel channel,RpcRequest request);
+	  void reply(Channel channel,RpcRequest request);
 
 }
